@@ -26,11 +26,12 @@ class MyFeed
     public string $description = '';
     public string $pubDate = '';
     public string $uri = '';
+    public string $feedUri = '';
 
 
     public function is_data_complete()
     {
-        return !empty($this->title) && !empty($this->firstEntry) && !empty($this->description) && !empty($this->pubDate) && !empty($this->uri);
+        return !empty($this->title) && !empty($this->firstEntry) && !empty($this->description) && !empty($this->pubDate) && !empty($this->uri) && !empty($this->feedUri);
     }
 }
 
@@ -42,6 +43,7 @@ class MyFeed
 class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareInterface
 {
     use HelperFactoryAwareTrait;
+
 
     /**
      * Returns the layout data.
@@ -64,14 +66,19 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         $nodes = $data['urls'];
         $master = curl_multi_init();
         $node_count = count($nodes);
-        // $node_count = 10;
-        $curl_arr = array();
+        // $node_count = 2;
+        $curl_arr = [];
         $master = curl_multi_init();
 
         for ($i = 0; $i < $node_count; $i++) {
             $url = $nodes[$i];
             $curl_arr[$i] = curl_init($url);
             curl_setopt($curl_arr[$i], CURLOPT_RETURNTRANSFER, true);
+            // curl_setopt($curl_arr[$i], CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:41.0) Gecko/20100101 Firefox/41.0');
+            // curl_setopt($curl_arr[$i], CURLOPT_HTTPHEADER, array('Content-type: application/rss+xml'));
+
+            // This one is necessary for redirects, e.g. in case of wordpress
+            curl_setopt($curl_arr[$i], CURLOPT_FOLLOWLOCATION, true);
             curl_multi_add_handle($master, $curl_arr[$i]);
         }
 
@@ -86,17 +93,18 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         // echo $results[2];
 
         $reader = new \XMLReader();
-        for ($x = 1; $x < count($data['urls']); $x++) {
-        // for ($x = 0; $x < 10; $x++) {
+        for ($x = 0; $x < count($nodes); $x++) {
+        // for ($x = 0; $x < 0; $x++) {
 
             // $feeds[$x] = $feedHelper->getFeedInformation($data['params'], $data['urls'][$x]);
             $feed = new MyFeed();
+            $feed->feedUri = $nodes[$x];
             // $reader->open($data['urls'][$x]);
 
             // TODO: suppress errors? , null, LIBXML_NOERROR | LIBXML_ERR_NONE | LIBXML_NOWARNING)
             // $reader->XML($results[$x]);
             $reader->XML($results[$x], null, LIBXML_NOERROR | LIBXML_ERR_NONE | LIBXML_NOWARNING);
-            
+
             $firstEntryFound = false;
             while ($reader->read()) {
                 if ($reader->nodeType == \XMLReader::ELEMENT) {

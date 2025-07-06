@@ -106,7 +106,7 @@ for ($i = 0; $i < $itemDisplayCount; $i++) {
 			<!-- Feed title -->
 			<?php if ($feed->title !== null && $params->get('rsstitle', 1)): ?>
 				<h6 class="<?= $direction; ?>">
-					<a href="<?= get_feed_base_url($urls[$i]) ?>
+					<a href="<?= get_feed_base_url($feed->feedUri) ?>
 							" target="_blank" rel="noopener">
 						<?= $feed->title; ?></a>
 				</h6>
