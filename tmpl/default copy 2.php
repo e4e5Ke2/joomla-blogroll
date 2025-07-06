@@ -90,43 +90,21 @@ for ($i = 0; $i < $itemDisplayCount; $i++) {
 	<div style="direction: <?= $rssrtl ? 'rtl' : 'ltr'; ?>;width:100%;overflow:auto;"
 		class="text-<?= $rssrtl ? 'right' : 'left'; ?> feed">
 
-		<!-- Feed image -->
-		<?php if ($params->get('rssimage', 1)): ?>
-			<div style="float:left;width:60px;">
-				<?php
-				$src = get_image_path($feed);
-				if ($src) {
-					echo '<img class="cropped" src=' . $src . '>';
-				} ?>
-			</div>
+		<!-- Feed title -->
+		<?php if ($feed->title !== null && $params->get('rsstitle', 1)): ?>
+			<h6 class="<?= $direction; ?>">
+				<a href="<?= get_feed_base_url($urls[$i]) ?>
+							" target="_blank" rel="noopener">
+					<?= $feed->title; ?></a>
+			</h6>
 		<?php endif; ?>
 
-		<div style="margin-left:60px">
+		<?php
+		$pubDate = new DateTimeImmutable($feed->pubDate);
+		$pubDateFormatted = $pubDate->format('d.m.Y');
 
-			<!-- Feed title -->
-			<?php if ($feed->title !== null && $params->get('rsstitle', 1)): ?>
-				<h6 class="<?= $direction; ?>">
-					<a href="<?= get_feed_base_url($urls[$i]) ?>
-							" target="_blank" rel="noopener">
-						<?= $feed->title; ?></a>
-				</h6>
-			<?php endif; ?>
-
-			<!-- Show first item title -->
-			<?php
-			// $uri = $feed->uri || !$feed->isPermaLink ? trim($feed->uri) : trim($feed->guid);
-			// $uri = !$uri || stripos($uri, 'http') !== 0 ? $rssurl : $uri;
-		
-			$pubDate = new DateTimeImmutable($feed->pubDate);
-			$pubDateFormatted = $pubDate->format('d.m.Y');
-			?>
-			<span class="feed-link">
-				<a href="<?= htmlspecialchars($feed->uri, ENT_COMPAT, 'UTF-8'); ?>" target="_blank" rel="noopener">
-					<?= trim($feed->firstEntry); ?></a></span>
-			-
-			<!--  Feed date -->
-			<span style="color:#404040"><?= trim($pubDateFormatted); ?></span>
-		</div>
+		echo '<span style="color:#404040">' . trim($pubDateFormatted) . '</span>';
+		?>
 
 		<!-- Divider between items -->
 		<?php if ($i < $itemDisplayCount - 1) { ?>
@@ -137,7 +115,7 @@ for ($i = 0; $i < $itemDisplayCount; $i++) {
 
 function get_image_path($feed)
 {
-	$description = $feed->description;
+	$description = $feed[0]->content;
 	if (!empty($description)) {
 		$doc = new DOMDocument();
 		libxml_use_internal_errors(true);

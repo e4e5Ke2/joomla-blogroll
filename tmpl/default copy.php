@@ -41,81 +41,131 @@ if ($isRtl && $myrtl == 0) {
 } elseif ($myrtl == 2) {
 	$direction = ' redirect-rtl';
 }
+?>
 
-foreach ($feeds as $feed) {
+<!-- TODO: these override all links on the website, not -->
+<style>
+	a:link {
+		color: black;
+		text-decoration: none;
+	}
+
+	a:visited {
+		color: black;
+		text-decoration: none;
+	}
+
+	a:hover {
+		color: blue;
+		text-decoration: underline;
+	}
+
+	a:active {
+		color: blue;
+		text-decoration: underline;
+	}
+
+	.cropped {
+		width: 50px;
+		height: 50px;
+		margin-top: 0px;
+		object-fit: cover;
+	}
+</style>
+
+<?php
+$itemDisplayCount = min(count($feeds), $params->get('rssitems', PHP_INT_MAX));
+for ($i = 0; $i < $itemDisplayCount; $i++) {
+	$feed = $feeds[$i];
 	if (!empty($feed) && is_string($feed)) {
 		echo $feed;
-	} else {
-
-		if ($feed !== false) {
-			?>
-			<div style="direction: <?php echo $rssrtl ? 'rtl' : 'ltr'; ?>;  width:100%;overflow:auto;"
-				class="text-<?php echo $rssrtl ? 'right' : 'left'; ?> feed">
-				<!-- Feed image -->
-				<div style="float:left;width:40px">
-					<?php
-					if ($feed->image && $params->get('rssimage', 1)):
-						echo HTMLHelper::_('image', $feed->image->uri, $feed->image->title, ['width' => '30px', 'height' => '30px']);
-					endif; ?>
-				</div>
-				<?php
-				// Feed title
-				if ($feed->title !== null && $params->get('rsstitle', 1)) {
-					?>
-					<h5 class="<?php echo $direction; ?>">
-						<a href="<?php echo htmlspecialchars($urls[0], ENT_COMPAT, 'UTF-8'); ?>" target="_blank" rel="noopener">
-							<?php echo $feed->title; ?></a>
-					</h5>
-					<?php
-				}
-				// Feed date
-				if ($params->get('rssdate', 1) && ($feed->publishedDate !== null)): ?>
-					<h3>
-						<?php echo HTMLHelper::_('date', $feed->publishedDate, Text::_('DATE_FORMAT_LC3')); ?>
-					</h3>
-				<?php endif;
-				// Feed description
-				if ($params->get('rssdesc', 1)) {
-					?>
-					<?php echo $feed->description; ?>
-					<?php
-				} ?>
-
-
-				<!-- Show items -->
-				<?php if (!empty($feed)) { ?>
-					<div class="newsfeed">
-						<?php for ($i = 0, $max = min(count($feed), $params->get('rssitems', 3)); $i < $max; $i++) { ?>
-							<?php
-							$uri = $feed[$i]->uri || !$feed[$i]->isPermaLink ? trim($feed[$i]->uri) : trim($feed[$i]->guid);
-							$uri = !$uri || stripos($uri, 'http') !== 0 ? $rssurl : $uri;
-							$text = $feed[$i]->content !== '' ? trim($feed[$i]->content) : '';
-
-							$pubDate = new DateTimeImmutable($feed[$i]->publishedDate);
-							$pubDateFormatted = $pubDate->format('d-m-Y H:i:s');
-							?>
-							<li>
-								<?php if (!empty($uri)): ?>
-									<span class="feed-link">
-										<a href="<?php echo htmlspecialchars($uri, ENT_COMPAT, 'UTF-8'); ?>" target="_blank" rel="noopener">
-											<?php echo trim($feed[$i]->title); ?></a></span>
-									<span class="feed-link"><?php echo trim($pubDateFormatted); ?></span>
-								<?php else: ?>
-									<span class="feed-link"><?php echo trim($feed[$i]->title); ?></span>
-								<?php endif; ?>
-
-								<?php if ($params->get('rssitemdate', 0) && $feed[$i]->publishedDate !== null): ?>
-									<div class="feed-item-date">
-										<?php echo HTMLHelper::_('date', $feed[$i]->publishedDate, Text::_('DATE_FORMAT_LC3')); ?>
-									</div>
-								<?php endif; ?>
-
-
-							</li>
-						<?php } ?>
-					</div>
-				<?php } ?>
-			</div>
-		<?php }
+		continue;
 	}
+
+	if ($feed == false) {
+		continue;
+	}
+	?>
+
+	<div style="direction: <?= $rssrtl ? 'rtl' : 'ltr'; ?>;width:100%;overflow:auto;"
+		class="text-<?= $rssrtl ? 'right' : 'left'; ?> feed">
+
+		<!-- Feed image -->
+		<?php if ($params->get('rssimage', 1)): ?>
+			<div style="float:left;width:60px;">
+				<?php
+				$src = get_image_path($feed);
+				if ($src) {
+					echo '<img class="cropped" src=' . $src . '>';
+				} ?>
+			</div>
+		<?php endif; ?>
+
+		<div style="margin-left:60px">
+
+			<!-- Feed title -->
+			<?php if ($feed->title !== null && $params->get('rsstitle', 1)): ?>
+				<h6 class="<?= $direction; ?>">
+					<a href="<?= get_feed_base_url($urls[$i]) ?>
+							" target="_blank" rel="noopener">
+						<?= $feed->title; ?></a>
+				</h6>
+			<?php endif; ?>
+
+			<!-- Show first item title -->
+			<?php if (!empty($feed)) { ?>
+				<?php
+				$firstItem = $feed[0];
+				$uri = $firstItem->uri || !$firstItem->isPermaLink ? trim($firstItem->uri) : trim($firstItem->guid);
+				$uri = !$uri || stripos($uri, 'http') !== 0 ? $rssurl : $uri;
+				$text = $firstItem->content !== '' ? trim($firstItem->content) : '';
+
+				$pubDate = new DateTimeImmutable($firstItem->publishedDate);
+				$pubDateFormatted = $pubDate->format('d.m.Y');
+				?>
+				<?php if (!empty($uri)): ?>
+					<span class="feed-link">
+						<a href="<?= htmlspecialchars($uri, ENT_COMPAT, 'UTF-8'); ?>" target="_blank" rel="noopener">
+							<?= trim($firstItem->title); ?></a></span>
+					-
+					<!--  Feed date -->
+					<span style="color:#404040"><?= trim($pubDateFormatted); ?></span>
+				<?php else: ?>
+					<span class="feed-link"><?= trim($firstItem->title); ?></span>
+				<?php endif; ?>
+			<?php } ?>
+		</div>
+
+		<!-- Divider between items -->
+		<?php if ($i < $itemDisplayCount - 1) { ?>
+			<hr>
+		<?php } ?>
+	</div>
+<?php }
+
+function get_image_path($feed)
+{
+	$description = $feed[0]->content;
+	if (!empty($description)) {
+		$doc = new DOMDocument();
+		libxml_use_internal_errors(true);
+		$success = $doc->loadHTML($description);
+		libxml_use_internal_errors(false);
+
+		if ($success) {
+			$xpath = new DOMXPath($doc);
+			$src = $xpath->evaluate("string(//img/@src)");
+
+			return $src;
+		}
+	}
+	return null;
+}
+
+function get_feed_base_url($rssUrl)
+{
+	// This seems overly complicated.. but I can't find the feed link anywhere.
+	$parsed_url = parse_url($rssUrl);
+	$base_url = $parsed_url['scheme'] . "://" . $parsed_url['host'] . "/";
+	return htmlspecialchars($base_url, ENT_COMPAT, 'UTF-8');
 }
