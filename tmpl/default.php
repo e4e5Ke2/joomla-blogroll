@@ -94,9 +94,8 @@ for ($i = 0; $i < $itemDisplayCount; $i++) {
 		<?php if ($params->get('rssimage', 1)): ?>
 			<div style="float:left;width:60px;">
 				<?php
-				$src = get_image_path($feed);
-				if ($src) {
-					echo '<img class="cropped" src=' . $src . '>';
+				if ($feed->imgUri) {
+					echo '<img class="cropped" src=' . $feed->imgUri . '>';
 				} ?>
 			</div>
 		<?php endif; ?>
@@ -135,25 +134,7 @@ for ($i = 0; $i < $itemDisplayCount; $i++) {
 	</div>
 <?php }
 
-function get_image_path($feed)
-{
-	$description = $feed->description;
-	if (!empty($description)) {
-		$doc = new DOMDocument();
-		libxml_use_internal_errors(true);
-		$success = $doc->loadHTML($description);
-		libxml_use_internal_errors(false);
-
-		if ($success) {
-			$xpath = new DOMXPath($doc);
-			$src = $xpath->evaluate("string(//img/@src)");
-
-			return $src;
-		}
-	}
-	return null;
-}
-
+// TODO: move out of here
 function get_feed_base_url($rssUrl)
 {
 	// This seems overly complicated.. but I can't find the feed link anywhere.

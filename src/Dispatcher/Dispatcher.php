@@ -27,7 +27,7 @@ class MyFeed
     public string $pubDate = '';
     public string $uri = '';
     public string $feedUri = '';
-
+    public string $imgUri = '';
 
     public function is_data_complete()
     {
@@ -43,6 +43,26 @@ class MyFeed
 class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareInterface
 {
     use HelperFactoryAwareTrait;
+
+    // TODO: refine to search for low res images?
+    protected function get_image_path($description)
+    {
+        if (!empty($description)) {
+            $doc = new \DOMDocument();
+            libxml_use_internal_errors(true);
+            $success = $doc->loadHTML($description);
+            libxml_use_internal_errors(false);
+
+            if ($success) {
+                $xpath = new \DOMXPath($doc);
+                $src = $xpath->evaluate("string(//img/@src)");
+
+                // echo 'src: ' . $src;
+                return $src;
+            }
+        }
+        return '';
+    }
 
 
     /**
@@ -74,14 +94,16 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             $url = $nodes[$i];
             $curl_arr[$i] = curl_init($url);
             curl_setopt($curl_arr[$i], CURLOPT_RETURNTRANSFER, true);
-            // curl_setopt($curl_arr[$i], CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:41.0) Gecko/20100101 Firefox/41.0');
-            // curl_setopt($curl_arr[$i], CURLOPT_HTTPHEADER, array('Content-type: application/rss+xml'));
+
+            // Adding a valid user agent string, otherwise some feed-servers return an error
+            curl_setopt($curl_arr[$i], CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:41.0) Gecko/20100101 Firefox/41.0');
 
             // This one is necessary for redirects, e.g. in case of wordpress
             curl_setopt($curl_arr[$i], CURLOPT_FOLLOWLOCATION, true);
             curl_multi_add_handle($master, $curl_arr[$i]);
         }
 
+        // TODO - add timeout
         do {
             curl_multi_exec($master, $running);
         } while ($running > 0);
@@ -90,11 +112,11 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         for ($i = 0; $i < $node_count; $i++) {
             $results[$i] = curl_multi_getcontent($curl_arr[$i]);
         }
-        // echo $results[2];
+        // echo $results[0];
 
         $reader = new \XMLReader();
         for ($x = 0; $x < count($nodes); $x++) {
-        // for ($x = 0; $x < 0; $x++) {
+            // for ($x = 0; $x < 0; $x++) {
 
             // $feeds[$x] = $feedHelper->getFeedInformation($data['params'], $data['urls'][$x]);
             $feed = new MyFeed();
@@ -109,7 +131,6 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             while ($reader->read()) {
                 if ($reader->nodeType == \XMLReader::ELEMENT) {
                     // TODO: values should only be set once.
-                    // TODO: blogspot doesnt have images in the description but in a separate thumbnail node
                     $tag = $reader->name;
                     if ($tag == 'title' && !$firstEntryFound) {
                         $feed->title = $reader->readInnerXml();
@@ -117,13 +138,13 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
                         $feed->pubDate = $reader->readInnerXml();
                     } else if ($tag == 'published' && $firstEntryFound) {
                         $feed->pubDate = $reader->readInnerXml();
-                    } else if ($tag == 'item') {
-                        $firstEntryFound = true;
-                    } else if ($tag == 'entry') {
+                    } else if (in_array($tag, ['item', 'entry'], true) && !$firstEntryFound) {
                         $firstEntryFound = true;
                     } else if ($tag == 'title' && $firstEntryFound) {
                         $feed->firstEntry = $reader->readInnerXml();
-                    } else if (in_array($tag, ['description', 'summary', 'content'], true) && $firstEntryFound) {
+                    }
+                    // Some blogs have description and content:encoded tags, so this only works if the order is correct
+                    else if (in_array($tag, ['description', 'summary', 'content', 'content:encoded'], true) && $firstEntryFound) {
                         $feed->description = $reader->readString();
                     } else if ($tag == 'link' && $firstEntryFound) {
                         if ($reader->getAttribute('rel') === 'alternate') {
@@ -131,12 +152,19 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
                         } else if ($reader->getAttribute('href') === null) {
                             $feed->uri = $reader->readString();
                         }
+                    } else if ($tag == 'media:thumbnail' && $firstEntryFound) {
+                        $feed->imgUri = $reader->getAttribute('url');
+                    }
+                    // Stop when we encounter the 2nd item in the feed.
+                    else if (in_array($tag, ['item', 'entry'], true) && $firstEntryFound) {
+                        break;
                     }
                 }
 
-                if ($feed->is_data_complete()) {
-                    break;
-                }
+            }
+
+            if (!$feed->imgUri) {
+                $feed->imgUri = $this->get_image_path($feed->description);
             }
 
             if ($feed->is_data_complete()) {
