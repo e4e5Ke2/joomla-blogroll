@@ -39,19 +39,19 @@ class FeedHelper
         // Get RSS parsed object
         try {
             libxml_use_internal_errors(true);
-            $feed = new FeedFactory();
-            $rssDoc = $feed->getFeed($rssurl);
+            $feedFactory = new FeedFactory();
+            $feed = $feedFactory->getFeed($rssurl);
             libxml_use_internal_errors(false);
         } catch (\Exception) {
             return Text::_('MOD_FEED_ERR_FEED_NOT_RETRIEVED');
         }
 
-        if (empty($rssDoc)) {
+        if (empty($feed)) {
             return Text::_('MOD_FEED_ERR_FEED_NOT_RETRIEVED');
         }
 
-        if ($rssDoc) {
-            return $rssDoc;
+        if ($feed) {
+            return $feed;
         }
     }
 

@@ -29,6 +29,7 @@ class MyFeed
     public string $feedUri = '';
     public string $imgUri = '';
 
+    // imgUri is optional
     public function is_data_complete()
     {
         return !empty($this->title) && !empty($this->firstEntry) && !empty($this->description) && !empty($this->pubDate) && !empty($this->uri) && !empty($this->feedUri);
@@ -116,7 +117,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
 
         $reader = new \XMLReader();
         for ($x = 0; $x < count($nodes); $x++) {
-            // for ($x = 0; $x < 0; $x++) {
+        // for ($x = 0; $x < 10; $x++) {
 
             // $feeds[$x] = $feedHelper->getFeedInformation($data['params'], $data['urls'][$x]);
             $feed = new MyFeed();
@@ -125,8 +126,37 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
 
             // TODO: suppress errors? , null, LIBXML_NOERROR | LIBXML_ERR_NONE | LIBXML_NOWARNING)
             // $reader->XML($results[$x]);
-            $reader->XML($results[$x], null, LIBXML_NOERROR | LIBXML_ERR_NONE | LIBXML_NOWARNING);
+            // $reader->XML($results[$x], null, LIBXML_NOERROR | LIBXML_ERR_NONE | LIBXML_NOWARNING);
 
+            $simpleXML = new \SimpleXMLElement(str_replace(['media:thumbnail', 'content:encoded'], ['mediathumbnail', 'contentencoded'], $results[$x]));
+            if ($simpleXML->getName() == 'rss') {
+                $rssFeed = $simpleXML->channel;
+            } else if ($simpleXML->getName() == 'feed') {
+                $rssFeed = $simpleXML;
+            }
+
+            $item = $this->first_tag_match($rssFeed, ['entry', 'item']);
+
+            $feed->title = $rssFeed->title;
+            $feed->firstEntry = $item->title;
+            $feed->pubDate = $this->first_tag_match($item, ['pubDate', 'published']);
+
+            // Order is important here. Some blogs have content encoded and description. We want content encoded if available.
+            $feed->description = $this->first_tag_match($item, ['contentencoded', 'description', 'summary', 'content']);
+
+            $feed->imgUri = $item->mediathumbnail['url'] ?? '';
+
+            foreach ($item->link as $link) {
+                if (!isset($link['href'])) {
+                    $feed->uri = $link;
+                    break;
+                } else if ($link['rel'] == 'alternate') {
+                    $feed->uri = $link['href'];
+                    break;
+                }
+            }
+
+            /*
             $firstEntryFound = false;
             while ($reader->read()) {
                 if ($reader->nodeType == \XMLReader::ELEMENT) {
@@ -162,6 +192,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
                 }
 
             }
+            */
 
             if (!$feed->imgUri) {
                 $feed->imgUri = $this->get_image_path($feed->description);
@@ -179,5 +210,15 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         $data['feeds'] = $feeds;
 
         return $data;
+    }
+
+    protected function first_tag_match($node, $tagArray)
+    {
+        foreach ($tagArray as $tag) {
+            if (isset($node->$tag)) {
+                return $node->$tag;
+            }
+        }
+        return '';
     }
 }
