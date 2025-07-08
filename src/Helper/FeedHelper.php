@@ -52,45 +52,23 @@ class FeedHelper
         Log::add('multi curl time: ' . floor(($curlEnd - $curlStart) * 1000) . 'ms', Log::DEBUG, 'performance');
 
         $parseStart = microtime(true);
+        $rssParser = new RssParser();
         for ($x = 0; $x < count($nodes); $x++) {
 
-            $feed = new RssFeed();
-            $feed->feedUri = $this->get_base_url($nodes[$x]);
+            try {
+                libxml_use_internal_errors(true);
+                $feed = $rssParser->parse($nodes[$x], $results[$x]);
 
-            $simpleXML = new \SimpleXMLElement($results[$x]);
-            $feedNode = match ($simpleXML->getName()) {
-                'rss' => $simpleXML->channel,
-                'feed' => $simpleXML,
-                default => null
-            };
-
-            if (!$feedNode)
-                continue;
-
-            $itemNode = $this->first_tag_match($feedNode, ['entry', 'item']);
-
-            $feed->feedTitle = $feedNode->title;
-            $feed->itemTitle = $itemNode->title;
-            $feed->pubDate = new DateTimeImmutable($this->first_tag_match($itemNode, ['pubDate', 'published']));
-
-            // Order is important here. Some blogs have content encoded and description. We want content encoded if available.
-            $contentEncoded = $itemNode->children('content', TRUE)->encoded;
-            $feed->description = $contentEncoded ?: $this->first_tag_match($itemNode, ['description', 'summary', 'content']);
-
-            $thumbnail = $itemNode->children('media', TRUE)->thumbnail;
-            $feed->imgUri = $thumbnail ? $thumbnail->attributes()->url : $this->get_image_path($feed->description);
-
-            foreach ($itemNode->link as $link) {
-                if (!isset($link['href']) || $link['rel'] == 'alternate') {
-                    $feed->itemUri = $link['href'] ?: $link;
-                    break;
+                if ($feed && $feed->is_data_complete()) {
+                    $feeds[] = $feed;
                 }
-            }
-
-            if ($feed->is_data_complete()) {
-                $feeds[] = $feed;
+                libxml_use_internal_errors(false);
+            } catch (\Exception) {
+                // We swallow this.
             }
         }
+
+
         $parseEnd = microtime(TRUE);
         Log::add('parse time: ' . floor(($parseEnd - $parseStart) * 1000) . 'ms', Log::DEBUG, 'performance');
 
@@ -98,57 +76,7 @@ class FeedHelper
             usort($feeds, fn($a, $b) => $a->pubDate < $b->pubDate);
         }
 
-        /*
-        try {
-            libxml_use_internal_errors(true);
-
-            libxml_use_internal_errors(false);
-        } catch (\Exception) {
-            return Text::_('MOD_FEED_ERR_FEED_NOT_RETRIEVED');
-        }
-
-        if (empty($feeds)) {
-            return Text::_('MOD_FEED_ERR_FEED_NOT_RETRIEVED');
-        }
-            */
-
         return $feeds;
     }
 
-    // TODO: refine to search for low res images?
-    protected function get_image_path($description)
-    {
-        if (!empty($description)) {
-            $doc = new \DOMDocument();
-            libxml_use_internal_errors(true);
-            $success = $doc->loadHTML($description);
-            libxml_use_internal_errors(false);
-
-            if ($success) {
-                $xpath = new \DOMXPath($doc);
-                $src = $xpath->evaluate("string(//img/@src)");
-
-                // echo 'src: ' . $src;
-                return $src;
-            }
-        }
-        return '';
-    }
-
-    protected function first_tag_match($node, $tagArray)
-    {
-        foreach ($tagArray as $tag) {
-            if (isset($node->$tag)) {
-                return $node->$tag;
-            }
-        }
-        return '';
-    }
-
-    protected function get_base_url($url)
-    {
-        $parsed_url = parse_url($url);
-        $base_url = $parsed_url['scheme'] . "://" . $parsed_url['host'] . "/";
-        return htmlspecialchars($base_url, ENT_COMPAT, 'UTF-8');
-    }
 }

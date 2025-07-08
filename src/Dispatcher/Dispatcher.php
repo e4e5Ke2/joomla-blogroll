@@ -11,8 +11,6 @@
 namespace Joomla\Module\Feed\Site\Dispatcher;
 
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
-use Joomla\CMS\Helper\HelperFactoryAwareInterface;
-use Joomla\CMS\Helper\HelperFactoryAwareTrait;
 use Joomla\Module\Feed\Site\Helper\FeedHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -25,19 +23,9 @@ use Joomla\Module\Feed\Site\Helper\FeedHelper;
  *
  * @since  5.1.0
  */
-class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareInterface
+class Dispatcher extends AbstractModuleDispatcher
 {
-    use HelperFactoryAwareTrait;
 
-
-
-    /**
-     * Returns the layout data.
-     *
-     * @return  array
-     *
-     * @since   5.1.0
-     */
     protected function getLayoutData(): array
     {
         $data = parent::getLayoutData();

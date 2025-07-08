@@ -112,13 +112,30 @@ for ($i = 0; $i < $itemDisplayCount; $i++) {
 			<?php endif; ?>
 
 			<!-- Show first item title -->
-			<?php
-			$pubDateFormatted = $feed->pubDate->format('d.m.Y');
-			?>
 			<span class="feed-link">
 				<a href="<?= htmlspecialchars($feed->itemUri, ENT_COMPAT, 'UTF-8'); ?>" target="_blank" rel="noopener">
 					<?= trim($feed->itemTitle); ?></a></span>
 			-
+
+			<?php
+			// TODO - ugly and move to parser
+			$now = new \DateTimeImmutable();
+			$interval = $now->diff($feed->pubDate);
+			if ($interval->d == 0) {
+				if ($interval->h == 0) {
+					$pubDateFormatted = $interval->format('%i minutes ago');
+				} else {
+					$pubDateFormatted = $interval->format('%h hours ago');
+				}
+			} else if ($interval->d == 1) {
+				$pubDateFormatted = '1 day ago';
+			} else {
+				$pubDateFormatted = $interval->format('%a days ago');
+			}
+
+			// TODO - keep as well and make configurable
+			// $pubDateFormatted = $feed->pubDate->format('d.m.Y');
+			?>
 			<!--  Feed date -->
 			<span style="color:#404040"><?= trim($pubDateFormatted); ?></span>
 		</div>
