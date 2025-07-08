@@ -93,10 +93,12 @@ for ($i = 0; $i < $itemDisplayCount; $i++) {
 		<!-- Feed image -->
 		<?php if ($params->get('rssimage', 1)): ?>
 			<div style="float:left;width:60px;">
-				<?php
-				if ($feed->imgUri) {
-					echo '<img class="cropped" src=' . $feed->imgUri . '>';
-				} ?>
+				<a href="<?= htmlspecialchars($feed->itemUri, ENT_COMPAT, 'UTF-8'); ?>" target="_blank" rel="noopener">
+					<?php
+					if ($feed->imgUri) {
+						echo '<img class="cropped" src=' . $feed->imgUri . '>';
+					} ?>
+				</a>
 			</div>
 		<?php endif; ?>
 
