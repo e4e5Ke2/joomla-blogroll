@@ -1,6 +1,6 @@
 <?php
 
-namespace Joomla\Module\Feed\Site\Dispatcher;
+namespace Joomla\Module\Feed\Site\Helper;
 
 use DateTimeImmutable;
 

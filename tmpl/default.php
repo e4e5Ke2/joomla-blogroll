@@ -15,7 +15,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\Filter\OutputFilter;
 
 // Check if feed URL has been set
-if (empty($urls)) {
+if (empty($feeds)) {
 	echo '<div>' . Text::_('MOD_FEED_ERR_NO_URL') . '</div>';
 
 	return;
