@@ -10,11 +10,11 @@
 
 namespace Joomla\Module\Feed\Site\Dispatcher;
 
-use DateTime;
 use DateTimeImmutable;
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
 use Joomla\CMS\Helper\HelperFactoryAwareInterface;
 use Joomla\CMS\Helper\HelperFactoryAwareTrait;
+use Joomla\CMS\Log\Log;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -85,10 +85,11 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         $feeds = [];
 
         $nodes = $data['urls'];
+
+        $curlStart = microtime(true);
         $master = curl_multi_init();
         $node_count = count($nodes);
         $curl_arr = [];
-        $master = curl_multi_init();
 
         for ($i = 0; $i < $node_count; $i++) {
             $url = $nodes[$i];
@@ -112,7 +113,10 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         for ($i = 0; $i < $node_count; $i++) {
             $results[$i] = curl_multi_getcontent($curl_arr[$i]);
         }
+        $curlEnd = microtime(TRUE);
+        Log::add('multi curl time: ' . floor(($curlEnd - $curlStart) * 1000) . 'ms', Log::DEBUG, 'performance');
 
+        $parseStart = microtime(true);
         for ($x = 0; $x < count($nodes); $x++) {
 
             $feed = new MyFeed();
@@ -148,6 +152,8 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
                 $feeds[] = $feed;
             }
         }
+        $parseEnd = microtime(TRUE);
+        Log::add('parse time: ' . floor(($parseEnd - $parseStart) * 1000) . 'ms', Log::DEBUG, 'performance');
 
         if ($data['params']->get('rsssorting', 1)) {
             usort($feeds, fn($a, $b) => $a->pubDate < $b->pubDate);
