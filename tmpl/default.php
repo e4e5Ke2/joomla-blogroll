@@ -103,11 +103,11 @@ for ($i = 0; $i < $itemDisplayCount; $i++) {
 		<div style="margin-left:60px">
 
 			<!-- Feed title -->
-			<?php if ($feed->title !== null && $params->get('rsstitle', 1)): ?>
+			<?php if ($feed->feedTitle !== null && $params->get('rsstitle', 1)): ?>
 				<h6 class="<?= $direction; ?>">
 					<a href="<?= get_feed_base_url($feed->feedUri) ?>
 							" target="_blank" rel="noopener">
-						<?= $feed->title; ?></a>
+						<?= $feed->feedTitle; ?></a>
 				</h6>
 			<?php endif; ?>
 

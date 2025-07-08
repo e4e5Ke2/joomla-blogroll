@@ -20,22 +20,6 @@ use Joomla\CMS\Log\Log;
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-class MyFeed
-{
-    public string $title = '';
-    public string $firstEntry = '';
-    public string $description = '';
-    public DateTimeImmutable $pubDate;
-    public string $uri = '';
-    public string $feedUri = '';
-    public string $imgUri = '';
-
-    // imgUri is optional
-    public function is_data_complete()
-    {
-        return !empty($this->title) && !empty($this->firstEntry) && !empty($this->description) && isset($this->pubDate) && !empty($this->uri) && !empty($this->feedUri);
-    }
-}
 
 /**
  * Dispatcher class for mod_feed
@@ -119,29 +103,33 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         $parseStart = microtime(true);
         for ($x = 0; $x < count($nodes); $x++) {
 
-            $feed = new MyFeed();
+            $feed = new RssFeed();
             $feed->feedUri = $nodes[$x];
 
             $simpleXML = new \SimpleXMLElement($results[$x]);
-            $rssFeed = match ($simpleXML->getName()) {
+            $feedNode = match ($simpleXML->getName()) {
                 'rss' => $simpleXML->channel,
                 'feed' => $simpleXML,
+                default => null
             };
 
-            $item = $this->first_tag_match($rssFeed, ['entry', 'item']);
+            if (!$feedNode)
+                continue;
 
-            $feed->title = $rssFeed->title;
-            $feed->firstEntry = $item->title;
-            $feed->pubDate = new DateTimeImmutable($this->first_tag_match($item, ['pubDate', 'published']));
+            $itemNode = $this->first_tag_match($feedNode, ['entry', 'item']);
+
+            $feed->feedTitle = $feedNode->title;
+            $feed->firstEntry = $itemNode->title;
+            $feed->pubDate = new DateTimeImmutable($this->first_tag_match($itemNode, ['pubDate', 'published']));
 
             // Order is important here. Some blogs have content encoded and description. We want content encoded if available.
-            $contentEncoded = $item->children('content', TRUE)->encoded;
-            $feed->description = $contentEncoded ?: $this->first_tag_match($item, ['description', 'summary', 'content']);
+            $contentEncoded = $itemNode->children('content', TRUE)->encoded;
+            $feed->description = $contentEncoded ?: $this->first_tag_match($itemNode, ['description', 'summary', 'content']);
 
-            $thumbnail = $item->children('media', TRUE)->thumbnail;
+            $thumbnail = $itemNode->children('media', TRUE)->thumbnail;
             $feed->imgUri = $thumbnail ? $thumbnail->attributes()->url : $this->get_image_path($feed->description);
 
-            foreach ($item->link as $link) {
+            foreach ($itemNode->link as $link) {
                 if (!isset($link['href']) || $link['rel'] == 'alternate') {
                     $feed->uri = $link['href'] ?: $link;
                     break;
