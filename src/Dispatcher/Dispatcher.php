@@ -104,7 +104,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
         for ($x = 0; $x < count($nodes); $x++) {
 
             $feed = new RssFeed();
-            $feed->feedUri = $nodes[$x];
+            $feed->feedUri = $this->get_base_url($nodes[$x]);
 
             $simpleXML = new \SimpleXMLElement($results[$x]);
             $feedNode = match ($simpleXML->getName()) {
@@ -119,7 +119,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             $itemNode = $this->first_tag_match($feedNode, ['entry', 'item']);
 
             $feed->feedTitle = $feedNode->title;
-            $feed->firstEntry = $itemNode->title;
+            $feed->itemTitle = $itemNode->title;
             $feed->pubDate = new DateTimeImmutable($this->first_tag_match($itemNode, ['pubDate', 'published']));
 
             // Order is important here. Some blogs have content encoded and description. We want content encoded if available.
@@ -131,7 +131,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
 
             foreach ($itemNode->link as $link) {
                 if (!isset($link['href']) || $link['rel'] == 'alternate') {
-                    $feed->uri = $link['href'] ?: $link;
+                    $feed->itemUri = $link['href'] ?: $link;
                     break;
                 }
             }
@@ -160,5 +160,12 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             }
         }
         return '';
+    }
+
+    protected function get_base_url($url)
+    {
+        $parsed_url = parse_url($url);
+        $base_url = $parsed_url['scheme'] . "://" . $parsed_url['host'] . "/";
+        return htmlspecialchars($base_url, ENT_COMPAT, 'UTF-8');
     }
 }

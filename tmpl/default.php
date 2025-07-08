@@ -105,7 +105,7 @@ for ($i = 0; $i < $itemDisplayCount; $i++) {
 			<!-- Feed title -->
 			<?php if ($feed->feedTitle !== null && $params->get('rsstitle', 1)): ?>
 				<h6 class="<?= $direction; ?>">
-					<a href="<?= get_feed_base_url($feed->feedUri) ?>
+					<a href="<?= $feed->feedUri ?>
 							" target="_blank" rel="noopener">
 						<?= $feed->feedTitle; ?></a>
 				</h6>
@@ -113,14 +113,11 @@ for ($i = 0; $i < $itemDisplayCount; $i++) {
 
 			<!-- Show first item title -->
 			<?php
-			// $uri = $feed->uri || !$feed->isPermaLink ? trim($feed->uri) : trim($feed->guid);
-			// $uri = !$uri || stripos($uri, 'http') !== 0 ? $rssurl : $uri;
-		
 			$pubDateFormatted = $feed->pubDate->format('d.m.Y');
 			?>
 			<span class="feed-link">
-				<a href="<?= htmlspecialchars($feed->uri, ENT_COMPAT, 'UTF-8'); ?>" target="_blank" rel="noopener">
-					<?= trim($feed->firstEntry); ?></a></span>
+				<a href="<?= htmlspecialchars($feed->itemUri, ENT_COMPAT, 'UTF-8'); ?>" target="_blank" rel="noopener">
+					<?= trim($feed->itemTitle); ?></a></span>
 			-
 			<!--  Feed date -->
 			<span style="color:#404040"><?= trim($pubDateFormatted); ?></span>
@@ -133,11 +130,3 @@ for ($i = 0; $i < $itemDisplayCount; $i++) {
 	</div>
 <?php }
 
-// TODO: move out of here
-function get_feed_base_url($rssUrl)
-{
-	// This seems overly complicated.. but I can't find the feed link anywhere.
-	$parsed_url = parse_url($rssUrl);
-	$base_url = $parsed_url['scheme'] . "://" . $parsed_url['host'] . "/";
-	return htmlspecialchars($base_url, ENT_COMPAT, 'UTF-8');
-}
