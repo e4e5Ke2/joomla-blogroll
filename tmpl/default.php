@@ -116,8 +116,7 @@ for ($i = 0; $i < $itemDisplayCount; $i++) {
 			// $uri = $feed->uri || !$feed->isPermaLink ? trim($feed->uri) : trim($feed->guid);
 			// $uri = !$uri || stripos($uri, 'http') !== 0 ? $rssurl : $uri;
 		
-			$pubDate = new DateTimeImmutable($feed->pubDate);
-			$pubDateFormatted = $pubDate->format('d.m.Y');
+			$pubDateFormatted = $feed->pubDate->format('d.m.Y');
 			?>
 			<span class="feed-link">
 				<a href="<?= htmlspecialchars($feed->uri, ENT_COMPAT, 'UTF-8'); ?>" target="_blank" rel="noopener">

@@ -11,6 +11,7 @@
 namespace Joomla\Module\Feed\Site\Dispatcher;
 
 use DateTime;
+use DateTimeImmutable;
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
 use Joomla\CMS\Helper\HelperFactoryAwareInterface;
 use Joomla\CMS\Helper\HelperFactoryAwareTrait;
@@ -24,7 +25,7 @@ class MyFeed
     public string $title = '';
     public string $firstEntry = '';
     public string $description = '';
-    public string $pubDate = '';
+    public DateTimeImmutable $pubDate;
     public string $uri = '';
     public string $feedUri = '';
     public string $imgUri = '';
@@ -32,7 +33,7 @@ class MyFeed
     // imgUri is optional
     public function is_data_complete()
     {
-        return !empty($this->title) && !empty($this->firstEntry) && !empty($this->description) && !empty($this->pubDate) && !empty($this->uri) && !empty($this->feedUri);
+        return !empty($this->title) && !empty($this->firstEntry) && !empty($this->description) && isset($this->pubDate) && !empty($this->uri) && !empty($this->feedUri);
     }
 }
 
@@ -112,7 +113,6 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             $results[$i] = curl_multi_getcontent($curl_arr[$i]);
         }
 
-        $reader = new \XMLReader();
         for ($x = 0; $x < count($nodes); $x++) {
 
             $feed = new MyFeed();
@@ -128,7 +128,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
 
             $feed->title = $rssFeed->title;
             $feed->firstEntry = $item->title;
-            $feed->pubDate = $this->first_tag_match($item, ['pubDate', 'published']);
+            $feed->pubDate = new DateTimeImmutable($this->first_tag_match($item, ['pubDate', 'published']));
 
             // Order is important here. Some blogs have content encoded and description. We want content encoded if available.
             $contentEncoded = $item->children('content', TRUE)->encoded;
@@ -137,7 +137,7 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
             $thumbnail = $item->children('media', TRUE)->thumbnail;
             $feed->imgUri = $thumbnail ? $thumbnail->attributes()->url : $this->get_image_path($feed->description);
 
-            foreach ($item->link as $link) {    
+            foreach ($item->link as $link) {
                 if (!isset($link['href']) || $link['rel'] == 'alternate') {
                     $feed->uri = $link['href'] ?: $link;
                     break;
@@ -148,10 +148,10 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
                 $feeds[] = $feed;
             }
         }
-        $reader->close();
 
-        // TODO: not sure if this is the right date to use
-        // usort($feeds, fn($a, $b) => new DateTimeImmutable($a[0]->publishedDate) < $b->updatedDate);
+        if ($data['params']->get('rsssorting', 1)) {
+            usort($feeds, fn($a, $b) => $a->pubDate < $b->pubDate);
+        }
 
         $data['feeds'] = $feeds;
 
