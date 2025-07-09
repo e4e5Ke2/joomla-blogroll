@@ -13,21 +13,23 @@ use Joomla\CMS\Log\Log;
 class FeedHelper
 {
 
+    public const TIMEOUT_IN_SECONDS = 5;
+
     public function getFeedInformation($params)
     {
 
         $urlListString = $params->get('rssurl_list', '');
-        $nodes = array_map(fn($url): string => filter_var($url, FILTER_SANITIZE_URL), preg_split("/\r\n|\n|\r/", $urlListString));
+        $rssUrls = array_map(fn($url): string => filter_var($url, FILTER_SANITIZE_URL), preg_split("/\r\n|\n|\r/", $urlListString));
         $feeds = [];
 
         $curlStart = microtime(true);
         $master = curl_multi_init();
-        $node_count = count($nodes);
-        Log::add('url count: ' . $node_count, Log::DEBUG, 'whatevs');
+        $urlCount = count($rssUrls);
+        Log::add('url count: ' . $urlCount, Log::DEBUG, 'curl');
         $curl_arr = [];
 
-        for ($i = 0; $i < $node_count; $i++) {
-            $url = $nodes[$i];
+        for ($i = 0; $i < $urlCount; $i++) {
+            $url = $rssUrls[$i];
             $curl_arr[$i] = curl_init($url);
             curl_setopt($curl_arr[$i], CURLOPT_RETURNTRANSFER, true);
 
@@ -39,25 +41,31 @@ class FeedHelper
             curl_multi_add_handle($master, $curl_arr[$i]);
         }
 
-        // TODO - add timeout
+        $curlExecStart = time();
         do {
             curl_multi_exec($master, $running);
-        } while ($running > 0);
+        } while ($running > 0 && (time() - $curlExecStart) <= FeedHelper::TIMEOUT_IN_SECONDS);
 
         $results = [];
-        for ($i = 0; $i < $node_count; $i++) {
-            $results[$i] = curl_multi_getcontent($curl_arr[$i]);
+        for ($i = 0; $i < $urlCount; $i++) {
+            $result = curl_multi_getcontent($curl_arr[$i]);
+
+            if ($result) {
+                $results[] = $result;  
+            } else {
+                Log::add('url timed out: ' . $rssUrls[$i], Log::DEBUG, 'curl');
+            }
         }
         $curlEnd = microtime(TRUE);
         Log::add('multi curl time: ' . floor(($curlEnd - $curlStart) * 1000) . 'ms', Log::DEBUG, 'performance');
 
         $parseStart = microtime(true);
         $rssParser = new RssParser();
-        for ($x = 0; $x < count($nodes); $x++) {
+        foreach ($results as $result) {
 
             try {
                 libxml_use_internal_errors(true);
-                $feed = $rssParser->parse($nodes[$x], $results[$x]);
+                $feed = $rssParser->parse($result);
 
                 if ($feed && $feed->is_data_complete()) {
                     $feeds[] = $feed;

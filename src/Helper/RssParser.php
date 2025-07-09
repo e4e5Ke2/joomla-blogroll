@@ -9,11 +9,9 @@ class RssParser
 
     protected static $itemTags = ['entry', 'item'];
 
-    public function parse($feedUri, $xmlString)
+    public function parse($xmlString)
     {
         $feed = new RssFeed();
-        $feed->feedUri = $this->get_base_url($feedUri);
-
         $simpleXML = new \SimpleXMLElement($xmlString);
         $feedNode = match ($simpleXML->getName()) {
             'rss' => $simpleXML->channel,
@@ -24,7 +22,7 @@ class RssParser
         if (!$feedNode)
             return;
 
-        $itemNode = $this->first_tag_match($feedNode, RssParser::$itemTags);     
+        $itemNode = $this->first_tag_match($feedNode, RssParser::$itemTags);
 
         $feed->feedTitle = $feedNode->title;
         $feed->itemTitle = $itemNode->title;
@@ -34,8 +32,16 @@ class RssParser
         $contentEncoded = $itemNode->children('content', TRUE)->encoded;
         $feed->description = $contentEncoded ?: $this->first_tag_match($itemNode, ['description', 'summary', 'content']);
 
+        // <enclosure url=.. is another format I found..
         $thumbnail = $itemNode->children('media', TRUE)->thumbnail;
         $feed->imgUri = $thumbnail ? $thumbnail->attributes()->url : $this->get_image_path($feed->description);
+
+        foreach ($feedNode->link as $link) {
+            if (!isset($link['href']) || $link['rel'] == 'alternate') {
+                $feed->feedUri = $link['href'] ?: $link;
+                break;
+            }
+        }
 
         foreach ($itemNode->link as $link) {
             if (!isset($link['href']) || $link['rel'] == 'alternate') {
@@ -75,12 +81,5 @@ class RssParser
             }
         }
         return '';
-    }
-
-    protected function get_base_url($url)
-    {
-        $parsed_url = parse_url($url);
-        $base_url = $parsed_url['scheme'] . "://" . $parsed_url['host'] . "/";
-        return htmlspecialchars($base_url, ENT_COMPAT, 'UTF-8');
     }
 }
