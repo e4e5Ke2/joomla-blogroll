@@ -29,12 +29,13 @@ class RssParser
         $feed->pubDate = new DateTimeImmutable($this->first_tag_match($itemNode, ['pubDate', 'published']));
 
         // Order is important here. Some blogs have content encoded and description. We want content encoded if available.
-        $contentEncoded = $itemNode->children('content', TRUE)->encoded;
-        $feed->description = $contentEncoded ?: $this->first_tag_match($itemNode, ['description', 'summary', 'content']);
+        // $contentEncoded = $itemNode->children('content', TRUE)->encoded;
+        // $feed->description = $contentEncoded ?: $this->first_tag_match($itemNode, ['description', 'summary', 'content']);
+        $feed->description = $this->first_tag_match($itemNode, ['content:encoded', 'description', 'summary', 'content']);
 
         // <enclosure url=.. is another format I found..
-        $thumbnail = $itemNode->children('media', TRUE)->thumbnail;
-        $feed->imgUri = $thumbnail ? $thumbnail->attributes()->url : $this->get_image_path($feed->description);
+        $thumbnail = $this->first_tag_match($itemNode, ['media:thumbnail', 'enclosure'], 'url');
+        $feed->imgUri = $thumbnail ?: $this->get_image_path($feed->description);
 
         foreach ($feedNode->link as $link) {
             if (!isset($link['href']) || $link['rel'] == 'alternate') {
@@ -73,12 +74,22 @@ class RssParser
         return '';
     }
 
-    protected function first_tag_match($node, $tagArray)
+    protected function first_tag_match($node, $tagArray, $attribute = '')
     {
         foreach ($tagArray as $tag) {
-            if (isset($node->$tag)) {
-                return $node->$tag;
+
+            if (str_contains($tag, ':')) {
+                $parts = explode(':', $tag);
+                if (count($parts) !== 2)
+                    continue;
+
+                $result = $node->children($parts[0], TRUE)->{$parts[1]};
+            } else {
+                $result = $node->$tag;
             }
+
+            if ($result)
+                return empty($attribute) ? $result : $result->attributes()->$attribute;
         }
         return '';
     }

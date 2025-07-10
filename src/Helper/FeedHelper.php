@@ -25,7 +25,6 @@ class FeedHelper
         $curlStart = microtime(true);
         $master = curl_multi_init();
         $urlCount = count($rssUrls);
-        Log::add('url count: ' . $urlCount, Log::DEBUG, 'curl');
         $curl_arr = [];
 
         for ($i = 0; $i < $urlCount; $i++) {
@@ -75,7 +74,7 @@ class FeedHelper
                 // We swallow this.
             }
         }
-
+        Log::add('loaded successfully: ' . count($feeds) . '/' . $urlCount, Log::DEBUG, 'curl');
 
         $parseEnd = microtime(TRUE);
         Log::add('parse time: ' . floor(($parseEnd - $parseStart) * 1000) . 'ms', Log::DEBUG, 'performance');
