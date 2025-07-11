@@ -13,12 +13,15 @@
 	<files>
 		<folder module="mod_feed">services</folder>
 		<folder>src</folder>
+		<folder>src\Helper</folder>
 		<folder>tmpl</folder>
+		<folder>language</folder>
 	</files>
-	<languages>
-		<language tag="en-GB">language/en-GB/mod_feed.ini</language>
-		<language tag="en-GB">language/en-GB/mod_feed.sys.ini</language>
-	</languages>
+	<administration>
+		<files>
+			<folder>language</folder>
+		</files>
+	</administration>
 	<help key="Site_Modules:_Feed_Display" />
 	<config>
 		<fields name="params">

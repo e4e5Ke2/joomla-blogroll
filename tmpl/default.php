@@ -22,6 +22,7 @@ if (empty($feeds)) {
 }
 
 $lang = $app->getLanguage();
+$app->getLanguage()->load('mod_feed', JPATH_BASE . '/modules/mod_feed');
 $myrtl = $params->get('rssrtl', 0);
 $direction = ' ';
 
@@ -30,7 +31,6 @@ $isRtl = $lang->isRtl();
 if ($isRtl && $myrtl == 0) {
 	$direction = ' redirect-rtl';
 } elseif ($isRtl && $myrtl == 1) {
-	// Feed description
 	$direction = ' redirect-ltr';
 } elseif ($isRtl && $myrtl == 2) {
 	$direction = ' redirect-rtl';
@@ -43,24 +43,15 @@ if ($isRtl && $myrtl == 0) {
 }
 ?>
 
-<!-- TODO: these override all links on the website, not -->
 <style>
-	a:link {
-		color: black;
+	.blogroll:link,
+	.blogroll:visited {
+		color: currentColor;
 		text-decoration: none;
 	}
 
-	a:visited {
-		color: black;
-		text-decoration: none;
-	}
-
-	a:hover {
-		color: blue;
-		text-decoration: underline;
-	}
-
-	a:active {
+	.blogroll:hover,
+	.blogroll:active {
 		color: blue;
 		text-decoration: underline;
 	}
@@ -107,39 +98,19 @@ for ($i = 0; $i < $itemDisplayCount; $i++) {
 			<!-- Feed title -->
 			<?php if ($feed->feedTitle !== null && $params->get('rsstitle', 1)): ?>
 				<h6 class="<?= $direction; ?>">
-					<a href="<?= $feed->feedUri ?>
+					<a class="blogroll" href="<?= $feed->feedUri ?>
 							" target="_blank" rel="noopener">
 						<?= $feed->feedTitle; ?></a>
 				</h6>
 			<?php endif; ?>
 
 			<!-- Show first item title -->
-			<span class="feed-link">
-				<a href="<?= htmlspecialchars($feed->itemUri, ENT_COMPAT, 'UTF-8'); ?>" target="_blank" rel="noopener">
-					<?= trim($feed->itemTitle); ?></a></span>
-			-
+			<a class="blogroll" href="<?= htmlspecialchars($feed->itemUri, ENT_COMPAT, 'UTF-8'); ?>" target="_blank"
+				rel="noopener">
+				<?= $feed->itemTitle; ?></a>
 
-			<?php
-			// TODO - ugly and move to parser
-			$now = new \DateTimeImmutable();
-			$interval = $now->diff($feed->pubDate);
-			if ($interval->d == 0) {
-				if ($interval->h == 0) {
-					$pubDateFormatted = $interval->format('%i minutes ago');
-				} else {
-					$pubDateFormatted = $interval->format('%h hours ago');
-				}
-			} else if ($interval->d == 1) {
-				$pubDateFormatted = '1 day ago';
-			} else {
-				$pubDateFormatted = $interval->format('%a days ago');
-			}
-
-			// TODO - keep as well and make configurable
-			// $pubDateFormatted = $feed->pubDate->format('d.m.Y');
-			?>
 			<!--  Feed date -->
-			<span style="color:#404040"><?= trim($pubDateFormatted); ?></span>
+			<span style="color:#404040"> - <?= $feed->timeDifference; ?></span>
 		</div>
 
 		<!-- Divider between items -->

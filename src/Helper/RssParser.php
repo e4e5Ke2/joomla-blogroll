@@ -3,11 +3,15 @@
 namespace Joomla\Module\Feed\Site\Helper;
 
 use DateTimeImmutable;
+use Joomla\CMS\Language\Text;
 
 class RssParser
 {
 
     protected static $itemTags = ['entry', 'item'];
+    protected static $pubDateTags = ['pubDate', 'published'];
+    protected static $descriptionTags = ['content:encoded', 'description', 'summary', 'content'];
+    protected static $thumbnailTags = ['media:thumbnail', 'enclosure'];
 
     public function parse($xmlString)
     {
@@ -26,13 +30,17 @@ class RssParser
 
         $feed->feedTitle = $feedNode->title;
         $feed->itemTitle = $itemNode->title;
-        $feed->pubDate = new DateTimeImmutable($this->first_tag_match($itemNode, ['pubDate', 'published']));
+
+        $feed->pubDate = new DateTimeImmutable($this->first_tag_match($itemNode, RssParser::$pubDateTags));
+        // TODO - keep as well and make configurable
+        // $pubDateFormatted = $feed->pubDate->format('d.m.Y');
+        $feed->timeDifference = $this->get_time_difference($feed->pubDate);
 
         // Order is important here. Some blogs have content encoded and description. We want content encoded if available.
-        $feed->description = $this->first_tag_match($itemNode, ['content:encoded', 'description', 'summary', 'content']);
+        $feed->description = $this->first_tag_match($itemNode, RssParser::$descriptionTags);
 
         // If the item doesnt have an explicit thumbnail tag, we extract the first picture we find in the description.
-        $thumbnailUrl = $this->first_tag_match($itemNode, ['media:thumbnail', 'enclosure'], 'url');
+        $thumbnailUrl = $this->first_tag_match($itemNode, RssParser::$thumbnailTags, 'url');
         $feed->imgUri = $thumbnailUrl ?: $this->get_image_path($feed->description);
         $feed->feedUri = $this->get_uri_from_links($feedNode->link);
         $feed->itemUri = $this->get_uri_from_links($itemNode->link);
@@ -71,7 +79,6 @@ class RssParser
     protected function first_tag_match($node, array $tagArray, $attribute = '')
     {
         foreach ($tagArray as $tag) {
-
             $parts = explode(':', $tag);
             $result = count($parts) == 2 ? $node->children($parts[0], TRUE)->{$parts[1]} : $node->$tag;
 
@@ -79,5 +86,21 @@ class RssParser
                 return empty($attribute) ? $result : $result->attributes()->$attribute;
         }
         return '';
+    }
+
+    protected function get_time_difference($pubDate)
+    {
+        $now = new DateTimeImmutable();
+        $interval = $now->diff($pubDate);
+
+        $timeDiff = match (true) {
+            $interval->y > 0 => Text::plural('MOD_FEED_N_YEARS_AGO', $interval->y),
+            $interval->m > 0 => Text::plural('MOD_FEED_N_MONTHS_AGO', $interval->m),
+            $interval->d > 0 => Text::plural('MOD_FEED_N_DAYS_AGO', $interval->d),
+            $interval->h > 0 => Text::plural('MOD_FEED_N_HOURS_AGO', $interval->h),
+            default => Text::plural('MOD_FEED_N_MINS_AGO', $interval->i)
+        };
+
+        return $timeDiff;
     }
 }

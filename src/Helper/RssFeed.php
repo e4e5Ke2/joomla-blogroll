@@ -12,11 +12,12 @@ class RssFeed
     public string $itemUri = '';
     public string $description = '';
     public DateTimeImmutable $pubDate;
+    public string $timeDifference = '';
     public string $imgUri = '';
 
     // imgUri is optional
     public function is_data_complete()
     {
-        return !empty($this->feedTitle) && !empty($this->itemTitle) && !empty($this->description) && isset($this->pubDate) && !empty($this->itemUri) && !empty($this->feedUri);
+        return !empty($this->feedTitle) && !empty($this->itemTitle) && !empty($this->description) && isset($this->pubDate) && !empty($this->itemUri) && !empty($this->feedUri) && !empty($this->timeDifference);
     }
 }

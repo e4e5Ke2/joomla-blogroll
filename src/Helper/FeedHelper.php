@@ -2,8 +2,6 @@
 
 namespace Joomla\Module\Feed\Site\Helper;
 
-use DateTimeImmutable;
-use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 
 // phpcs:disable PSR1.Files.SideEffects
