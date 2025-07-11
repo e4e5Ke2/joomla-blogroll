@@ -48,7 +48,7 @@ class FeedHelper
             $result = curl_multi_getcontent($curl_arr[$i]);
 
             if ($result) {
-                $results[] = $result;  
+                $results[] = $result;
             } else {
                 Log::add('url timed out: ' . $rssUrls[$i], Log::DEBUG, 'curl');
             }
@@ -78,7 +78,7 @@ class FeedHelper
         Log::add('parse time: ' . floor(($parseEnd - $parseStart) * 1000) . 'ms', Log::DEBUG, 'performance');
 
         if ($params->get('rsssorting', 1)) {
-            usort($feeds, fn($a, $b) => $a->pubDate < $b->pubDate);
+            usort($feeds, fn($a, $b) => $a->pubDate < $b->pubDate ? 1 : -1);
         }
 
         return $feeds;

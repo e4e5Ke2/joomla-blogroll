@@ -22,6 +22,12 @@
 			<folder>language</folder>
 		</files>
 	</administration>
+	<languages>
+		<language tag="en-GB">language/en-GB/mod_feed.ini</language>
+		<language tag="en-GB">language/en-GB/mod_feed.sys.ini</language>
+		<language tag="de-DE">language/de-DE/mod_feed.ini</language>
+		<language tag="de-DE">language/de-DE/mod_feed.sys.ini</language>
+	</languages>
 	<help key="Site_Modules:_Feed_Display" />
 	<config>
 		<fields name="params">

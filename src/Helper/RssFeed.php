@@ -18,6 +18,10 @@ class RssFeed
     // imgUri is optional
     public function is_data_complete()
     {
-        return !empty($this->feedTitle) && !empty($this->itemTitle) && !empty($this->description) && isset($this->pubDate) && !empty($this->itemUri) && !empty($this->feedUri) && !empty($this->timeDifference);
+         foreach ($this as $key => $value) {
+            if ($key == 'imgUri') continue;
+            if (!$value || empty($value)) return false; 
+         }
+         return true;
     }
 }
