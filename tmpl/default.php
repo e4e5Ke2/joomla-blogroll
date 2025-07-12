@@ -2,7 +2,8 @@
 defined('_JEXEC') or die;
 
 $wa = $app->getDocument()->getWebAssetManager();
-$wa->registerAndUseScript('mod_feed.show-all', 'mod_feed/show-all.js', [], ['defer' => 'true'], ["core", "jquery"]);
+$wa->getRegistry()->addExtensionRegistryFile('mod_feed');
+$wa->useScript('mod_feed.show-all');
 
 $lang = $app->getLanguage();
 $myrtl = $params->get('rssrtl', 0);
