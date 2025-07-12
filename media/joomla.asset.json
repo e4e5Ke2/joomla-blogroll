@@ -1,0 +1,21 @@
+{
+    "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
+    "name": "mod_feed",
+    "version": "1.0.0",
+    "description": "Example joomla.asset.json file",
+    "license": "GPL-2.0+",
+    "assets": [
+        {
+            "name": "mod_feed.show-all",
+            "type": "script",
+            "uri": "mod_feed/show-all.js",
+            "attributes": {
+                "defer": true
+            },
+            "dependencies": [
+                "core"
+            ],
+            "version": "1.0.0"
+        }
+    ]
+}

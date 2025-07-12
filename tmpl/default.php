@@ -1,28 +1,10 @@
 <?php
-
-/**
- * @package     Joomla.Site
- * @subpackage  mod_feed
- *
- * @copyright   (C) 2006 Open Source Matters, Inc. <https://www.joomla.org>
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
- */
-
 defined('_JEXEC') or die;
 
-use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Text;
-use Joomla\Filter\OutputFilter;
-
-// Check if feed URL has been set
-if (empty($feeds)) {
-	echo '<div>' . Text::_('MOD_FEED_ERR_NO_URL') . '</div>';
-
-	return;
-}
+$wa = $app->getDocument()->getWebAssetManager();
+$wa->registerAndUseScript('mod_feed.show-all', 'mod_feed/show-all.js', [], ['defer' => 'true'], ["core", "jquery"]);
 
 $lang = $app->getLanguage();
-$app->getLanguage()->load('mod_feed', JPATH_BASE . '/modules/mod_feed');
 $myrtl = $params->get('rssrtl', 0);
 $direction = ' ';
 
@@ -118,5 +100,7 @@ for ($i = 0; $i < $itemDisplayCount; $i++) {
 			<hr>
 		<?php } ?>
 	</div>
-<?php }
+<?php } ?>
+
+<button type="button">"PRESS ME"</button>
 

@@ -28,6 +28,10 @@
 		<language tag="de-DE">language/de-DE/mod_feed.ini</language>
 		<language tag="de-DE">language/de-DE/mod_feed.sys.ini</language>
 	</languages>
+	<media destination="mod_feed" folder="media">
+		<filename>joomla.asset.json</filename>
+		<folder>js</folder>
+	</media>
 	<help key="Site_Modules:_Feed_Display" />
 	<config>
 		<fields name="params">
