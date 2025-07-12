@@ -1,14 +1,14 @@
 {
     "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
-    "name": "mod_feed",
+    "name": "mod_blogroll",
     "version": "1.0.1",
     "description": "Example joomla.asset.json file",
     "license": "GPL-2.0+",
     "assets": [
         {
-            "name": "mod_feed.show-all",
+            "name": "mod_blogroll.show-all",
             "type": "script",
-            "uri": "mod_feed/show-all.js",
+            "uri": "mod_blogroll/show-all.js",
             "attributes": {
                 "defer": true
             },

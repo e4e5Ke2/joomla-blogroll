@@ -1,6 +1,6 @@
 <?php
 
-namespace Joomla\Module\Feed\Site\Helper;
+namespace Joomla\Module\Blogroll\Site\Helper;
 
 use DateTimeImmutable;
 

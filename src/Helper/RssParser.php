@@ -1,6 +1,6 @@
 <?php
 
-namespace Joomla\Module\Feed\Site\Helper;
+namespace Joomla\Module\Blogroll\Site\Helper;
 
 use DateTimeImmutable;
 use Joomla\CMS\Language\Text;
@@ -94,11 +94,11 @@ class RssParser
         $interval = $now->diff($pubDate);
 
         $timeDiff = match (true) {
-            $interval->y > 0 => Text::plural('MOD_FEED_N_YEARS_AGO', $interval->y),
-            $interval->m > 0 => Text::plural('MOD_FEED_N_MONTHS_AGO', $interval->m),
-            $interval->d > 0 => Text::plural('MOD_FEED_N_DAYS_AGO', $interval->d),
-            $interval->h > 0 => Text::plural('MOD_FEED_N_HOURS_AGO', $interval->h),
-            default => Text::plural('MOD_FEED_N_MINS_AGO', $interval->i)
+            $interval->y > 0 => Text::plural('MOD_BLOGROLL_N_YEARS_AGO', $interval->y),
+            $interval->m > 0 => Text::plural('MOD_BLOGROLL_N_MONTHS_AGO', $interval->m),
+            $interval->d > 0 => Text::plural('MOD_BLOGROLL_N_DAYS_AGO', $interval->d),
+            $interval->h > 0 => Text::plural('MOD_BLOGROLL_N_HOURS_AGO', $interval->h),
+            default => Text::plural('MOD_BLOGROLL_N_MINS_AGO', $interval->i)
         };
 
         return $timeDiff;

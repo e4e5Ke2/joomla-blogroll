@@ -2,8 +2,8 @@
 defined('_JEXEC') or die;
 
 $wa = $app->getDocument()->getWebAssetManager();
-$wa->getRegistry()->addExtensionRegistryFile('mod_feed');
-$wa->useScript('mod_feed.show-all');
+$wa->getRegistry()->addExtensionRegistryFile('mod_blogroll');
+$wa->useScript('mod_blogroll.show-all');
 
 $lang = $app->getLanguage();
 $myrtl = $params->get('rssrtl', 0);
@@ -103,5 +103,5 @@ for ($i = 0; $i < $itemDisplayCount; $i++) {
 	</div>
 <?php } ?>
 
-<button type="button">"PRESS ME"</button>
+<button class="mod_blogroll_showall" type="button">"PRESS ME"</button>
 

@@ -6,9 +6,9 @@ const showAll = (event) => {
     event.target.innerHTML = "jsddjd";
 };
 
-document.querySelectorAll('.mod_hello_showall').forEach(element => {
+document.querySelectorAll('.mod_blogroll_showall').forEach(element => {
     element.addEventListener('click', showAll);
 });
-document.querySelectorAll('.mod_hello_showall').forEach(element => {
+document.querySelectorAll('.mod_blogroll_showall').forEach(element => {
     element.innerText += "yoloo";
 });

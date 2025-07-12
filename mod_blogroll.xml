@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extension type="module" client="site" method="upgrade">
-	<name>mod_feed</name>
-	<author>Joomla! Project</author>
-	<creationDate>2005-07</creationDate>
+	<name>Blogroll</name>
+	<author>Alexander Bach</author>
+	<creationDate>2025-07</creationDate>
 	<copyright>(C) 2005 Open Source Matters, Inc.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-	<authorEmail>admin@joomla.org</authorEmail>
+	<authorEmail>bachalex86@gmail.com</authorEmail>
 	<authorUrl>www.joomla.org</authorUrl>
-	<version>3.0.0</version>
-	<description>MOD_FEED_XML_DESCRIPTION</description>
-	<namespace path="src">Joomla\Module\Feed</namespace>
+	<version>1.0.0</version>
+	<description>MOD_BLOGROLL_XML_DESCRIPTION</description>
+	<namespace path="src">Joomla\Module\Blogroll</namespace>
 	<files>
-		<folder module="mod_feed">services</folder>
+		<folder module="mod_blogroll">services</folder>
 		<folder>src</folder>
 		<folder>src\Helper</folder>
 		<folder>tmpl</folder>
@@ -23,23 +23,23 @@
 		</files>
 	</administration>
 	<languages>
-		<language tag="en-GB">language/en-GB/mod_feed.ini</language>
-		<language tag="en-GB">language/en-GB/mod_feed.sys.ini</language>
-		<language tag="de-DE">language/de-DE/mod_feed.ini</language>
-		<language tag="de-DE">language/de-DE/mod_feed.sys.ini</language>
+		<language tag="en-GB">language/en-GB/mod_blogroll.ini</language>
+		<language tag="en-GB">language/en-GB/mod_blogroll.sys.ini</language>
+		<language tag="de-DE">language/de-DE/mod_blogroll.ini</language>
+		<language tag="de-DE">language/de-DE/mod_blogroll.sys.ini</language>
 	</languages>
-	<media destination="mod_feed" folder="media">
+	<media destination="mod_blogroll" folder="media">
 		<filename>joomla.asset.json</filename>
 		<folder>js</folder>
 	</media>
-	<help key="Site_Modules:_Feed_Display" />
+	<help key="Site_Modules:_Blogroll_Display" />
 	<config>
 		<fields name="params">
 			<fieldset name="basic">
 				<field
 					name="rssurl_list"
 					type="textarea"
-					label="MOD_FEED_FIELD_RSSURL_LABEL"
+					label="MOD_BLOGROLL_FIELD_RSSURL_LABEL"
 					required="true"
 					rows="10"
 					cols="5"
@@ -62,7 +62,7 @@
 					name="rssrtl"
 					type="radio"
 					layout="joomla.form.field.radio.switcher"
-					label="MOD_FEED_FIELD_RTL_LABEL"
+					label="MOD_BLOGROLL_FIELD_RTL_LABEL"
 					default="0"
 					filter="integer"
 				>
@@ -74,7 +74,7 @@
 					name="rsstitle"
 					type="radio"
 					layout="joomla.form.field.radio.switcher"
-					label="MOD_FEED_FIELD_RSSTITLE_LABEL"
+					label="MOD_BLOGROLL_FIELD_RSSTITLE_LABEL"
 					default="1"
 					filter="integer"
 				>
@@ -86,7 +86,7 @@
 					name="rssdesc"
 					type="radio"
 					layout="joomla.form.field.radio.switcher"
-					label="MOD_FEED_FIELD_DESCRIPTION_LABEL"
+					label="MOD_BLOGROLL_FIELD_DESCRIPTION_LABEL"
 					default="1"
 					filter="integer"
 				>
@@ -97,7 +97,7 @@
 				<field
 					name="rssdate"
 					type="radio"
-					label="MOD_FEED_FIELD_DATE_LABEL"
+					label="MOD_BLOGROLL_FIELD_DATE_LABEL"
 					layout="joomla.form.field.radio.switcher"
 					default="0"
 				>
@@ -109,7 +109,7 @@
 					name="rssimage"
 					type="radio"
 					layout="joomla.form.field.radio.switcher"
-					label="MOD_FEED_FIELD_IMAGE_LABEL"
+					label="MOD_BLOGROLL_FIELD_IMAGE_LABEL"
 					default="1"
 					filter="integer"
 				>
@@ -120,7 +120,7 @@
 				<field
 					name="rssitems"
 					type="number"
-					label="MOD_FEED_FIELD_ITEMS_LABEL"
+					label="MOD_BLOGROLL_FIELD_ITEMS_LABEL"
 					default="3"
 					filter="integer"
 					min="1"
@@ -131,7 +131,7 @@
 					name="rssitemdesc"
 					type="radio"
 					layout="joomla.form.field.radio.switcher"
-					label="MOD_FEED_FIELD_ITEMDESCRIPTION_LABEL"
+					label="MOD_BLOGROLL_FIELD_ITEMDESCRIPTION_LABEL"
 					default="1"
 					filter="integer"
 				>
@@ -142,7 +142,7 @@
 				<field
 					name="rssitemdate"
 					type="radio"
-					label="MOD_FEED_FIELD_ITEMDATE_LABEL"
+					label="MOD_BLOGROLL_FIELD_ITEMDATE_LABEL"
 					layout="joomla.form.field.radio.switcher"
 					default="0"
 					filter="integer"
@@ -154,8 +154,8 @@
 				<field
 					name="word_count"
 					type="text"
-					label="MOD_FEED_FIELD_WORDCOUNT_LABEL"
-					description="MOD_FEED_FIELD_WORDCOUNT_DESC"
+					label="MOD_BLOGROLL_FIELD_WORDCOUNT_LABEL"
+					description="MOD_BLOGROLL_FIELD_WORDCOUNT_DESC"
 					default="0"
 					filter="integer"
 				/>
