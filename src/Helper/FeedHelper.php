@@ -17,8 +17,12 @@ class FeedHelper
     {
 
         $urlListString = $params->get('rssurl_list', '');
-        $rssUrls = array_map(fn($url): string => filter_var($url, FILTER_SANITIZE_URL), preg_split("/\r\n|\n|\r/", $urlListString));
-        $feeds = [];
+        $rssUrls = [];
+        foreach (preg_split("/\r\n|\n|\r/", $urlListString) as $url) {
+            if (trim($url) !== '') {
+                $rssUrls[] = filter_var($url, FILTER_SANITIZE_URL);
+            }
+        }
 
         $curlStart = microtime(true);
         $master = curl_multi_init();
@@ -58,6 +62,7 @@ class FeedHelper
 
         $parseStart = microtime(true);
         $rssParser = new RssParser();
+        $feeds = [];
         foreach ($results as $result) {
 
             try {
