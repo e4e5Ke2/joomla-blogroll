@@ -37,6 +37,7 @@ $wa->useScript('mod_blogroll.show-all');
 
 	.mod_blogroll_showall_button {
 		display: inline;
+		margin-top: 20px;
 		padding: 0;
 		border: 0;
 		font: inherit;
@@ -53,12 +54,15 @@ $wa->useScript('mod_blogroll.show-all');
 	}
 </style>
 
+<!-- Feed items -->
 <?php
 $feedCount = count($feeds);
 $itemDisplayCount = min($feedCount, $params->get('rssitems', PHP_INT_MAX));
 for ($i = 0; $i < $itemDisplayCount; $i++) {
 	$feed = $feeds[$i];
 	item_layout($feed, $params, $feedCount, $i);
+	if ($i < $itemDisplayCount - 1)
+		echo '<hr>';
 }
 ?>
 
@@ -67,6 +71,7 @@ for ($i = 0; $i < $itemDisplayCount; $i++) {
 	<?php
 	for ($i = $itemDisplayCount; $i < $feedCount; $i++) {
 		$feed = $feeds[$i];
+		echo '<hr>';
 		item_layout($feed, $params, $feedCount, $i);
 	}
 	?>
@@ -113,10 +118,5 @@ function item_layout($feed, $params, $feedCount, $index)
 			<!--  Feed date -->
 			<span style="color:#404040"> - <?= $feed->timeDifference; ?></span>
 		</div>
-
-		<hr>
-		<!-- TODO: show last divider or not? -->
-		<?php if ($index < $feedCount - 1) { ?>
-		<?php } ?>
 	</div>
 <?php } ?>
