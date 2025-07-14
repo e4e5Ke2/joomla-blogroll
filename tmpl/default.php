@@ -113,7 +113,7 @@ function item_layout($feed, $params, $hideImg = false)
 				<?= $feed->itemTitle; ?></a>
 
 			<!--  Feed date -->
-			<p style="color:#606060;font-size:14px;margin-top:5px"><?= $feed->timeDifference; ?></p>
+			<p style="color:#606060;font-size:14px;margin-top:5px"><?= ($feed->author ? ('von ' . $feed->author . ' | ') : '') . $feed->timeDifference; ?></p>
 
 		</div>
 		<hr>

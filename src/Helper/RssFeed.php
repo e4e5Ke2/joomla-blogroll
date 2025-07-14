@@ -14,12 +14,15 @@ class RssFeed
     public DateTimeImmutable $pubDate;
     public string $timeDifference = '';
     public string $imgUri = '';
+    public string $author = '';
+
+    protected $optionalKeys = ['imgUri', 'author'];
 
     // imgUri is optional
     public function is_data_complete()
     {
          foreach ($this as $key => $value) {
-            if ($key == 'imgUri') continue;
+            if (in_array($key, $this->optionalKeys)) continue;
             if (!$value || empty($value)) return false; 
          }
          return true;

@@ -45,6 +45,12 @@ class RssParser
         $feed->feedUri = $this->get_uri_from_links($feedNode->link);
         $feed->itemUri = $this->get_uri_from_links($itemNode->link);
 
+        if ($itemNode->author) {
+            $feed->author = $itemNode->author->name;
+        } else {
+            $feed->author = $this->first_tag_match($itemNode, ['dc:creator']);
+        }
+
         return $feed;
     }
 
