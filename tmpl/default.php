@@ -24,7 +24,7 @@ $wa->useScript('mod_blogroll.show-all');
 		text-decoration: underline;
 	}
 
-	.cropped {
+	.mod_blogroll_img {
 		width: 50px;
 		height: 50px;
 		margin-top: 0px;
@@ -37,7 +37,7 @@ $wa->useScript('mod_blogroll.show-all');
 
 	.mod_blogroll_showall_button {
 		display: inline;
-		margin-top: 20px;
+		margin-top: 0px;
 		padding: 0;
 		border: 0;
 		font: inherit;
@@ -61,8 +61,6 @@ $itemDisplayCount = min($feedCount, $params->get('rssitems', PHP_INT_MAX));
 for ($i = 0; $i < $itemDisplayCount; $i++) {
 	$feed = $feeds[$i];
 	item_layout($feed, $params);
-	if ($i < $itemDisplayCount - 1)
-		echo '<hr>';
 }
 ?>
 
@@ -71,8 +69,7 @@ for ($i = 0; $i < $itemDisplayCount; $i++) {
 	<?php
 	for ($i = $itemDisplayCount; $i < $feedCount; $i++) {
 		$feed = $feeds[$i];
-		echo '<hr>';
-		item_layout($feed, $params);
+		item_layout($feed, $params, true);
 	}
 	?>
 </div>
@@ -83,7 +80,7 @@ for ($i = 0; $i < $itemDisplayCount; $i++) {
 <?php } ?>
 
 <?php
-function item_layout($feed, $params)
+function item_layout($feed, $params, $hideImg = false)
 { ?>
 	<div style="width:100%;overflow:auto;">
 
@@ -93,7 +90,7 @@ function item_layout($feed, $params)
 				<a href="<?= htmlspecialchars($feed->itemUri, ENT_COMPAT, 'UTF-8'); ?>" target="_blank" rel="noopener">
 					<?php
 					if ($feed->imgUri) {
-						echo '<img class="cropped" src=' . $feed->imgUri . '>';
+						echo '<img class="mod_blogroll_img" ' . ($hideImg ? 'data-' : '') . 'src=' . $feed->imgUri . '>';
 					} ?>
 				</a>
 			</div>
@@ -116,7 +113,9 @@ function item_layout($feed, $params)
 				<?= $feed->itemTitle; ?></a>
 
 			<!--  Feed date -->
-			<span style="color:#404040"> - <?= $feed->timeDifference; ?></span>
+			<p style="color:#606060;font-size:14px;margin-top:5px"><?= $feed->timeDifference; ?></p>
+
 		</div>
+		<hr>
 	</div>
 <?php } ?>
