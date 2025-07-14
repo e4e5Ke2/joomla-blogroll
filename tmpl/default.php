@@ -60,7 +60,7 @@ $feedCount = count($feeds);
 $itemDisplayCount = min($feedCount, $params->get('rssitems', PHP_INT_MAX));
 for ($i = 0; $i < $itemDisplayCount; $i++) {
 	$feed = $feeds[$i];
-	item_layout($feed, $params, $feedCount, $i);
+	item_layout($feed, $params);
 	if ($i < $itemDisplayCount - 1)
 		echo '<hr>';
 }
@@ -72,7 +72,7 @@ for ($i = 0; $i < $itemDisplayCount; $i++) {
 	for ($i = $itemDisplayCount; $i < $feedCount; $i++) {
 		$feed = $feeds[$i];
 		echo '<hr>';
-		item_layout($feed, $params, $feedCount, $i);
+		item_layout($feed, $params);
 	}
 	?>
 </div>
@@ -83,7 +83,7 @@ for ($i = 0; $i < $itemDisplayCount; $i++) {
 <?php } ?>
 
 <?php
-function item_layout($feed, $params, $feedCount, $index)
+function item_layout($feed, $params)
 { ?>
 	<div style="width:100%;overflow:auto;">
 
