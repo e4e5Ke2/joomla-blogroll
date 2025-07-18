@@ -64,7 +64,6 @@ class FeedHelper
         $rssParser = new RssParser();
         $feeds = [];
         foreach ($results as $result) {
-
             try {
                 libxml_use_internal_errors(true);
                 $feed = $rssParser->parse($result);

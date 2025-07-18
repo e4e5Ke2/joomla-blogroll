@@ -45,6 +45,10 @@ class RssParser
         $feed->feedUri = $this->get_uri_from_links($feedNode->link);
         $feed->itemUri = $this->get_uri_from_links($itemNode->link);
 
+        if (!$feed->feedUri) {
+            $feed->feedUri = $this->get_base_url($feed->itemUri);
+        }
+
         if ($itemNode->author) {
             $feed->author = $itemNode->author->name;
         } else {
@@ -109,4 +113,12 @@ class RssParser
 
         return $timeDiff;
     }
+    
+    protected function get_base_url($rssUrl)
+    {
+        $parsed_url = parse_url($rssUrl);
+        $base_url = $parsed_url['scheme'] . "://" . $parsed_url['host'] . "/";
+        return htmlspecialchars($base_url, ENT_COMPAT, 'UTF-8');
+    }
+
 }
