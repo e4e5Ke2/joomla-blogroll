@@ -10,6 +10,7 @@ class RssParser
 
     protected static $itemTags = ['entry', 'item'];
     protected static $pubDateTags = ['pubDate', 'published'];
+    // Order is important here. Some blogs have content encoded and description. We want content encoded if available.
     protected static $descriptionTags = ['content:encoded', 'description', 'summary', 'content'];
     protected static $thumbnailTags = ['media:thumbnail', 'enclosure'];
 
@@ -35,13 +36,12 @@ class RssParser
         // TODO - keep as well and make configurable
         // $pubDateFormatted = $feed->pubDate->format('d.m.Y');
         $feed->timeDifference = $this->get_time_difference($feed->pubDate);
-
-        // Order is important here. Some blogs have content encoded and description. We want content encoded if available.
         $feed->description = $this->first_tag_match($itemNode, RssParser::$descriptionTags);
 
         // If the item doesnt have an explicit thumbnail tag, we extract the first picture we find in the description.
         $thumbnailUrl = $this->first_tag_match($itemNode, RssParser::$thumbnailTags, 'url');
         $feed->imgUri = $thumbnailUrl ?: $this->get_image_path($feed->description);
+        
         $feed->feedUri = $this->get_uri_from_links($feedNode->link);
         $feed->itemUri = $this->get_uri_from_links($itemNode->link);
 
@@ -68,7 +68,6 @@ class RssParser
         return '';
     }
 
-    // TODO: refine to search for low res images?
     protected function get_image_path($description)
     {
         if (!empty($description)) {

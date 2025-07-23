@@ -18,7 +18,6 @@ class RssFeed
 
     protected $optionalKeys = ['imgUri', 'author'];
 
-    // imgUri is optional
     public function is_data_complete()
     {
          foreach ($this as $key => $value) {
