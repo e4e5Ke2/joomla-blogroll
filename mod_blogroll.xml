@@ -43,7 +43,7 @@
 					required="true"
 					rows="10"
 					cols="5"
-					hint="Enter feed URLs here. Every URL should go into a new line. E.g.:&#xD;&#xD;https://feed1.com&#xD;https://feed2.com&#xD;https://feed3.com"
+					hint="Enter feed URLs here. Every URL should go into a new line. E.g.:&#xD;&#xD;https://website1.com/feed&#xD;https://website2.com/feed&#xD;https://website3.com/feed"
 				/>
 
 				<field
