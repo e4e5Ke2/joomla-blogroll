@@ -15,7 +15,6 @@ class Dispatcher extends AbstractModuleDispatcher
     protected function getLayoutData(): array
     {
         $data = parent::getLayoutData();
-        $data['rssrtl'] = $data['params']->get('rssrtl', 0);
         $feedHelper = new FeedHelper();
         $data['feeds'] = $feedHelper->getFeedInformation($data['params']);
         return $data;
