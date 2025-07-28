@@ -71,18 +71,6 @@
 				</field>
 
 				<field
-					name="rssdesc"
-					type="radio"
-					layout="joomla.form.field.radio.switcher"
-					label="MOD_BLOGROLL_FIELD_DESCRIPTION_LABEL"
-					default="1"
-					filter="integer"
-				>
-					<option value="0">JHIDE</option>
-					<option value="1">JSHOW</option>
-				</field>
-
-				<field
 					name="rssdate"
 					type="radio"
 					label="MOD_BLOGROLL_FIELD_DATE_LABEL"
@@ -116,18 +104,6 @@
 				/>
 
 				<field
-					name="rssitemdesc"
-					type="radio"
-					layout="joomla.form.field.radio.switcher"
-					label="MOD_BLOGROLL_FIELD_ITEMDESCRIPTION_LABEL"
-					default="1"
-					filter="integer"
-				>
-					<option value="0">JHIDE</option>
-					<option value="1">JSHOW</option>
-				</field>
-
-				<field
 					name="rssitemdate"
 					type="radio"
 					label="MOD_BLOGROLL_FIELD_ITEMDATE_LABEL"
@@ -140,13 +116,17 @@
 				</field>
 
 				<field
-					name="word_count"
-					type="text"
-					label="MOD_BLOGROLL_FIELD_WORDCOUNT_LABEL"
-					description="MOD_BLOGROLL_FIELD_WORDCOUNT_DESC"
-					default="0"
+					name="rssauthor"
+					type="radio"
+					label="MOD_BLOGROLL_FIELD_AUTHOR_LABEL"
+					layout="joomla.form.field.radio.switcher"
+					default="1"
 					filter="integer"
-				/>
+				>
+					<option value="0">JHIDE</option>
+					<option value="1">JSHOW</option>
+				</field>
+
 			</fieldset>
 			<fieldset name="advanced">
 				<field

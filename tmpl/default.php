@@ -52,6 +52,12 @@ $wa->useScript('mod_blogroll.show-all');
 	.mod_blogroll_showall_button:active {
 		color: blue;
 	}
+
+	.author_date_label {
+		color:#606060;
+		font-size:14px;
+		margin-top:5px
+	}
 </style>
 
 <!-- Feed items -->
@@ -96,7 +102,7 @@ function item_layout($feed, $params, $hideImg = false)
 			</div>
 		<?php endif; ?>
 
-		<div style="margin-left:60px">
+		<?= '<div' . ($params->get('rssimage', 1) ? ' style="margin-left:60px"' : '') . '>' ?>
 
 			<!-- Feed title -->
 			<?php if ($feed->feedTitle !== null && $params->get('rsstitle', 1)): ?>
@@ -113,7 +119,7 @@ function item_layout($feed, $params, $hideImg = false)
 				<?= $feed->itemTitle; ?></a>
 
 			<!--  Feed date -->
-			<p style="color:#606060;font-size:14px;margin-top:5px"><?= ($feed->author ? ('von ' . $feed->author . ' | ') : '') . $feed->timeDifference; ?></p>
+			<p class="author_date_label"><?= ($feed->author && $params->get('rssauthor', 1) ? ('von ' . $feed->author . ' | ') : '') . $feed->timeDifference; ?></p>
 
 		</div>
 		<hr>
