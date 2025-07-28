@@ -66,7 +66,7 @@ class FeedHelper
         foreach ($results as $result) {
             try {
                 libxml_use_internal_errors(true);
-                $feed = $rssParser->parse($result);
+                $feed = $rssParser->parse($result, $params);
 
                 if ($feed && $feed->is_data_complete()) {
                     $feeds[] = $feed;

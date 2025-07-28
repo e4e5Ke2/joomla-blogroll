@@ -14,7 +14,7 @@ class RssParser
     protected static $descriptionTags = ['content:encoded', 'description', 'summary', 'content'];
     protected static $thumbnailTags = ['media:thumbnail', 'enclosure'];
 
-    public function parse($xmlString)
+    public function parse($xmlString, $params)
     {
         $feed = new RssFeed();
         $simpleXML = new \SimpleXMLElement($xmlString);
@@ -33,15 +33,18 @@ class RssParser
         $feed->itemTitle = $itemNode->title;
 
         $feed->pubDate = new DateTimeImmutable($this->first_tag_match($itemNode, RssParser::$pubDateTags));
-        // TODO - keep as well and make configurable
-        // $pubDateFormatted = $feed->pubDate->format('d.m.Y');
-        $feed->timeDifference = $this->get_time_difference($feed->pubDate);
+        $feed->timeDifference = match ($params->get('rssitemdate_format', '0')) {
+            '0' => $this->get_time_difference($feed->pubDate),
+            '1' => $feed->pubDate->format('d.m.Y'),
+            '2' => $feed->pubDate->format('m.d.Y')
+        };
+
         $feed->description = $this->first_tag_match($itemNode, RssParser::$descriptionTags);
 
         // If the item doesnt have an explicit thumbnail tag, we extract the first picture we find in the description.
         $thumbnailUrl = $this->first_tag_match($itemNode, RssParser::$thumbnailTags, 'url');
         $feed->imgUri = $thumbnailUrl ?: $this->get_image_path($feed->description);
-        
+
         $feed->feedUri = $this->get_uri_from_links($feedNode->link);
         $feed->itemUri = $this->get_uri_from_links($itemNode->link);
 
@@ -112,7 +115,7 @@ class RssParser
 
         return $timeDiff;
     }
-    
+
     protected function get_base_url($rssUrl)
     {
         $parsed_url = parse_url($rssUrl);

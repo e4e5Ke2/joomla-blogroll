@@ -54,9 +54,10 @@ $wa->useScript('mod_blogroll.show-all');
 	}
 
 	.author_date_label {
-		color:#606060;
-		font-size:14px;
-		margin-top:5px
+		color: #606060;
+		font-size: 14px;
+		margin-top: 5px;
+		margin-bottom: 0px;
 	}
 </style>
 
@@ -88,39 +89,51 @@ for ($i = 0; $i < $itemDisplayCount; $i++) {
 <?php
 function item_layout($feed, $params, $hideImg = false)
 { ?>
-	<div style="width:100%;overflow:auto;">
+	<div>
+		<div style="display:flex">
 
-		<!-- Feed image -->
-		<?php if ($params->get('rssimage', 1)): ?>
-			<div style="float:left;width:60px;">
-				<a href="<?= htmlspecialchars($feed->itemUri, ENT_COMPAT, 'UTF-8'); ?>" target="_blank" rel="noopener">
-					<?php
-					if ($feed->imgUri) {
-						echo '<img class="mod_blogroll_img" ' . ($hideImg ? 'data-' : '') . 'src=' . $feed->imgUri . '>';
-					} ?>
-				</a>
-			</div>
-		<?php endif; ?>
-
-		<?= '<div' . ($params->get('rssimage', 1) ? ' style="margin-left:60px"' : '') . '>' ?>
-
-			<!-- Feed title -->
-			<?php if ($feed->feedTitle !== null && $params->get('rsstitle', 1)): ?>
-				<h6>
-					<a class="blogroll" href="<?= $feed->feedUri ?>
-							" target="_blank" rel="noopener">
-						<?= $feed->feedTitle; ?></a>
-				</h6>
+			<!-- Feed image -->
+			<?php if ($params->get('rssimage', 1)): ?>
+				<div style="width:60px;flex-shrink:0">
+					<a href="<?= htmlspecialchars($feed->itemUri, ENT_COMPAT, 'UTF-8'); ?>" target="_blank" rel="noopener">
+						<?php
+						if ($feed->imgUri) {
+							echo '<img class="mod_blogroll_img" ' . ($hideImg ? 'data-' : '') . 'src=' . $feed->imgUri . '>';
+						} ?>
+					</a>
+				</div>
 			<?php endif; ?>
 
-			<!-- Show first item title -->
-			<a class="blogroll" href="<?= htmlspecialchars($feed->itemUri, ENT_COMPAT, 'UTF-8'); ?>" target="_blank"
-				rel="noopener">
-				<?= $feed->itemTitle; ?></a>
+			<div style="flex-grow:1;overflow:auto;">
 
-			<!--  Feed date -->
-			<p class="author_date_label"><?= ($feed->author && $params->get('rssauthor', 1) ? ('von ' . $feed->author . ' | ') : '') . $feed->timeDifference; ?></p>
+				<!-- Feed title -->
+				<?php if ($feed->feedTitle !== null && $params->get('rsstitle', 1)): ?>
+					<h6>
+						<a class="blogroll" href="<?= $feed->feedUri ?>
+							" target="_blank" rel="noopener">
+							<?= $feed->feedTitle; ?></a>
+					</h6>
+				<?php endif; ?>
 
+				<!-- Show first item title -->
+				<a class="blogroll" href="<?= htmlspecialchars($feed->itemUri, ENT_COMPAT, 'UTF-8'); ?>" target="_blank"
+					rel="noopener">
+					<?= $feed->itemTitle; ?></a>
+
+				<!--  Feed author / date -->
+				<?php
+				$showAuthor = $feed->author && $params->get('rssauthor', 1);
+				$showDate = $params->get('rssitemdate', 1);
+
+				$authorLabel = $showAuthor ? Text::_('MOD_BLOGROLL_BY') . ' ' . $feed->author : '';
+				$dateLabel = $showDate ? $feed->timeDifference : '';
+
+				if ($showAuthor || $showDate) { ?>
+					<p class="author_date_label">
+						<?= join(' | ', array_filter([$authorLabel, $dateLabel])); ?>
+					</p>
+				<?php } ?>
+			</div>
 		</div>
 		<hr>
 	</div>

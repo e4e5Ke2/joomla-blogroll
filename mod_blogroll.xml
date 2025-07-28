@@ -59,29 +59,6 @@
 				</field>
 
 				<field
-					name="rsstitle"
-					type="radio"
-					layout="joomla.form.field.radio.switcher"
-					label="MOD_BLOGROLL_FIELD_RSSTITLE_LABEL"
-					default="1"
-					filter="integer"
-				>
-					<option value="0">JHIDE</option>
-					<option value="1">JSHOW</option>
-				</field>
-
-				<field
-					name="rssdate"
-					type="radio"
-					label="MOD_BLOGROLL_FIELD_DATE_LABEL"
-					layout="joomla.form.field.radio.switcher"
-					default="0"
-				>
-					<option value="0">JNO</option>
-					<option value="1">JYES</option>
-				</field>
-
-				<field
 					name="rssimage"
 					type="radio"
 					layout="joomla.form.field.radio.switcher"
@@ -91,28 +68,6 @@
 				>
 					<option value="0">JHIDE</option>
 					<option value="1">JSHOW</option>
-				</field>
-
-				<field
-					name="rssitems"
-					type="number"
-					label="MOD_BLOGROLL_FIELD_ITEMS_LABEL"
-					default="5"
-					filter="integer"
-					min="1"
-					validate="number"
-				/>
-
-				<field
-					name="rssitemdate"
-					type="radio"
-					label="MOD_BLOGROLL_FIELD_ITEMDATE_LABEL"
-					layout="joomla.form.field.radio.switcher"
-					default="0"
-					filter="integer"
-				>
-					<option value="0">JNO</option>
-					<option value="1">JYES</option>
 				</field>
 
 				<field
@@ -126,6 +81,38 @@
 					<option value="0">JHIDE</option>
 					<option value="1">JSHOW</option>
 				</field>
+
+				<field
+					name="rssitemdate"
+					type="radio"
+					label="MOD_BLOGROLL_FIELD_DATE_LABEL"
+					layout="joomla.form.field.radio.switcher"
+					default="0"
+					filter="integer"
+				>
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+
+				<field
+					name="rssitemdate_format"
+					type="list"
+					default="0"
+					label="MOD_BLOGROLL_FIELD_DATE_FORMAT_LABEL">
+					<option value="0">MOD_BLOGROLL_FIELD_DATE_FORMAT_OPTION_0</option>
+					<option value="1">MOD_BLOGROLL_FIELD_DATE_FORMAT_OPTION_1</option>
+					<option value="2">MOD_BLOGROLL_FIELD_DATE_FORMAT_OPTION_2</option>
+				</field>
+
+				<field
+					name="rssitems"
+					type="number"
+					label="MOD_BLOGROLL_FIELD_ITEMS_LABEL"
+					default="5"
+					filter="integer"
+					min="1"
+					validate="number"
+				/>
 
 			</fieldset>
 			<fieldset name="advanced">
