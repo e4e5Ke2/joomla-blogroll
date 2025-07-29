@@ -1,9 +1,9 @@
 <?php
 
-namespace Joomla\Module\Blogroll\Site\Dispatcher;
+namespace My\Module\Blogroll\Site\Dispatcher;
 
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
-use Joomla\Module\Blogroll\Site\Helper\FeedHelper;
+use My\Module\Blogroll\Site\Helper\FeedHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;

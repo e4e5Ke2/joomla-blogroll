@@ -61,32 +61,8 @@ $wa->useScript('mod_blogroll.show-all');
 	}
 </style>
 
-<!-- Feed items -->
 <?php
-$feedCount = count($feeds);
-$itemDisplayCount = min($feedCount, $params->get('rssitems_limit_count', PHP_INT_MAX));
-for ($i = 0; $i < $itemDisplayCount; $i++) {
-	$feed = $feeds[$i];
-	item_layout($feed, $params);
-}
-?>
-
-<!-- Collapsible items -->
-<div class="mod_blogroll_showall_container">
-	<?php
-	for ($i = $itemDisplayCount; $i < $feedCount; $i++) {
-		$feed = $feeds[$i];
-		item_layout($feed, $params, true);
-	}
-	?>
-</div>
-
-<!-- Button to collapse/expand -->
-<?php if ($feedCount > $itemDisplayCount) { ?>
-	<button class="mod_blogroll_showall_button" type="button"><?= Text::_('MOD_BLOGROLL_SHOW_MORE'); ?></button>
-<?php } ?>
-
-<?php
+if (!function_exists('item_layout')) {
 function item_layout($feed, $params, $hideImg = false)
 { ?>
 	<div>
@@ -137,4 +113,31 @@ function item_layout($feed, $params, $hideImg = false)
 		</div>
 		<hr>
 	</div>
+<?php }
+} ?>
+
+<!-- Feed items -->
+<?php
+$feedCount = count($feeds);
+$itemDisplayCount = min($feedCount, $params->get('rssitems_limit_count', PHP_INT_MAX));
+for ($i = 0; $i < $itemDisplayCount; $i++) {
+	$feed = $feeds[$i];
+	item_layout($feed, $params);
+}
+?>
+
+<!-- Collapsible items -->
+<div class="mod_blogroll_showall_container">
+	<?php
+	for ($i = $itemDisplayCount; $i < $feedCount; $i++) {
+		$feed = $feeds[$i];
+		item_layout($feed, $params, true);
+	}
+	?>
+</div>
+
+<!-- Button to collapse/expand -->
+<?php if ($feedCount > $itemDisplayCount) { ?>
+	<button class="mod_blogroll_showall_button" type="button"><?= Text::_('MOD_BLOGROLL_SHOW_MORE'); ?></button>
 <?php } ?>
+

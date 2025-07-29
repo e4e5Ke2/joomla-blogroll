@@ -6,10 +6,10 @@
 	<copyright>(C) 2005 Open Source Matters, Inc.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail>bachalex86@gmail.com</authorEmail>
-	<authorUrl>www.joomla.org</authorUrl>
+	<authorUrl>web</authorUrl>
 	<version>1.0.0</version>
 	<description>MOD_BLOGROLL_XML_DESCRIPTION</description>
-	<namespace path="src">Joomla\Module\Blogroll</namespace>
+	<namespace path="src">My\Module\Blogroll</namespace>
 	<files>
 		<folder module="mod_blogroll">services</folder>
 		<folder>src</folder>

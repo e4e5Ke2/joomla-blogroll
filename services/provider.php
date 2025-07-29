@@ -12,8 +12,8 @@ return new class () implements ServiceProviderInterface {
 
     public function register(Container $container): void
     {
-        $container->registerServiceProvider(new ModuleDispatcherFactory('\\Joomla\\Module\\Blogroll'));
-        $container->registerServiceProvider(new HelperFactory('\\Joomla\\Module\\Blogroll\\Site\\Helper'));
+        $container->registerServiceProvider(new ModuleDispatcherFactory('\\My\\Module\\Blogroll'));
+        $container->registerServiceProvider(new HelperFactory('\\My\\Module\\Blogroll\\Site\\Helper'));
         $container->registerServiceProvider(new Module());
     }
 };
