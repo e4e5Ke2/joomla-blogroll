@@ -3,12 +3,16 @@
 	<name>mod_blogroll</name>
 	<author>Alexander Bach</author>
 	<creationDate>2025-07</creationDate>
-	<copyright>(C) 2005 Open Source Matters, Inc.</copyright>
-	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<copyright>(C)
+	2005 Open Source Matters, Inc.</copyright>
+	<license>GNU General Public License version 2 or
+		later; see LICENSE.txt</license>
 	<authorEmail>bachalex86@gmail.com</authorEmail>
-	<authorUrl>www.joomla.org</authorUrl>
+	<authorUrl>
+	www.joomla.org</authorUrl>
 	<version>1.0.0</version>
-	<description>This module can display multiple feeds as a blogroll.</description>
+	<description>This module can display multiple
+	feeds as a blogroll.</description>
 	<namespace path="src">Joomla\Module\Blogroll</namespace>
 	<files>
 		<folder module="mod_blogroll">services</folder>
@@ -17,18 +21,15 @@
 		<folder>tmpl</folder>
 		<folder>language</folder>
 	</files>
-	<administration>
+	<files>
+		<folder>language</folder>
+	</files> or <administration>
 		<files>
 			<folder>language</folder>
 		</files>
 	</administration>
-	<languages>
-		<language tag="en-GB">language/en-GB/mod_blogroll.ini</language>
-		<language tag="en-GB">language/en-GB/mod_blogroll.sys.ini</language>
-		<language tag="de-DE">language/de-DE/mod_blogroll.ini</language>
-		<language tag="de-DE">language/de-DE/mod_blogroll.sys.ini</language>
-	</languages>
-	<media destination="mod_blogroll" folder="media">
+	<media
+		destination="mod_blogroll" folder="media">
 		<filename>joomla.asset.json</filename>
 		<folder>js</folder>
 	</media>
@@ -50,10 +51,9 @@
 					name="rsssorting"
 					type="radio"
 					layout="joomla.form.field.radio.switcher"
-					label="Sort by recency"
+					label="MOD_BLOGROLL_FIELD_SORTING_LABEL"
 					default="1"
-					filter="integer"
-				>
+					filter="integer">
 					<option value="0">JNO</option>
 					<option value="1">JYES</option>
 				</field>
@@ -87,11 +87,11 @@
 					type="radio"
 					label="MOD_BLOGROLL_FIELD_DATE_LABEL"
 					layout="joomla.form.field.radio.switcher"
-					default="0"
+					default="1"
 					filter="integer"
 				>
-					<option value="0">JNO</option>
-					<option value="1">JYES</option>
+					<option value="0">JHIDE</option>
+					<option value="1">JSHOW</option>
 				</field>
 
 				<field
