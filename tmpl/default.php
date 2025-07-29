@@ -61,10 +61,20 @@ $wa->useScript('mod_blogroll.show-all');
 	}
 </style>
 
+<!-- Feed items -->
 <?php
-if (!function_exists('item_layout')) {
-function item_layout($feed, $params, $hideImg = false)
-{ ?>
+$feedCount = count($feeds);
+$itemDisplayCount = min($feedCount, $params->get('rssitems_limit_count', PHP_INT_MAX));
+for ($i = 0; $i < $feedCount; $i++) {
+
+	if ($i == $itemDisplayCount) {
+		echo '<div class="mod_blogroll_showall_container">';
+	}
+
+	$feed = $feeds[$i];
+	$hideImg = $i >= $itemDisplayCount;
+	?>
+
 	<div>
 		<div style="display:flex">
 
@@ -98,46 +108,19 @@ function item_layout($feed, $params, $hideImg = false)
 
 				<!--  Feed author / date -->
 				<?php
-				$showAuthor = $feed->author && $params->get('rssauthor', 1);
-				$showDate = $params->get('rssitemdate', 1);
-
-				$authorLabel = $showAuthor ? Text::_('MOD_BLOGROLL_BY') . ' ' . $feed->author : '';
-				$dateLabel = $showDate ? $feed->timeDifference : '';
-
-				if ($showAuthor || $showDate) { ?>
+				if ($feed->authorDateLabel) { ?>
 					<p class="author_date_label">
-						<?= join(' | ', array_filter([$authorLabel, $dateLabel])); ?>
+						<?= $feed->authorDateLabel; ?>
 					</p>
 				<?php } ?>
 			</div>
 		</div>
 		<hr>
 	</div>
-<?php }
-} ?>
-
-<!-- Feed items -->
-<?php
-$feedCount = count($feeds);
-$itemDisplayCount = min($feedCount, $params->get('rssitems_limit_count', PHP_INT_MAX));
-for ($i = 0; $i < $itemDisplayCount; $i++) {
-	$feed = $feeds[$i];
-	item_layout($feed, $params);
-}
-?>
-
-<!-- Collapsible items -->
-<div class="mod_blogroll_showall_container">
-	<?php
-	for ($i = $itemDisplayCount; $i < $feedCount; $i++) {
-		$feed = $feeds[$i];
-		item_layout($feed, $params, true);
-	}
-	?>
-</div>
+<?php } ?>
 
 <!-- Button to collapse/expand -->
 <?php if ($feedCount > $itemDisplayCount) { ?>
+	</div>
 	<button class="mod_blogroll_showall_button" type="button"><?= Text::_('MOD_BLOGROLL_SHOW_MORE'); ?></button>
 <?php } ?>
-

@@ -58,6 +58,16 @@ class RssParser
             $feed->author = $this->first_tag_match($itemNode, ['dc:creator']);
         }
 
+        $showAuthor = $feed->author && $params->get('rssauthor', 1);
+        $showDate = $params->get('rssitemdate', 1);
+
+        $authorLabel = $showAuthor ? Text::_('MOD_BLOGROLL_BY') . ' ' . $feed->author : '';
+        $dateLabel = $showDate ? $feed->timeDifference : '';
+
+        if ($showAuthor || $showDate) {
+            $feed->authorDateLabel = join(' • ', array_filter([$authorLabel, $dateLabel]));
+        }
+
         return $feed;
     }
 

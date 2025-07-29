@@ -15,8 +15,9 @@ class RssFeed
     public string $timeDifference = '';
     public string $imgUri = '';
     public string $author = '';
+    public string $authorDateLabel = '';
 
-    protected $optionalKeys = ['imgUri', 'author'];
+    protected $optionalKeys = ['imgUri', 'author', 'authorDateLabel'];
 
     public function is_data_complete()
     {
