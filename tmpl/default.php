@@ -64,7 +64,7 @@ $wa->useScript('mod_blogroll.show-all');
 <!-- Feed items -->
 <?php
 $feedCount = count($feeds);
-$itemDisplayCount = min($feedCount, $params->get('rssitems', PHP_INT_MAX));
+$itemDisplayCount = min($feedCount, $params->get('rssitems_limit_count', PHP_INT_MAX));
 for ($i = 0; $i < $itemDisplayCount; $i++) {
 	$feed = $feeds[$i];
 	item_layout($feed, $params);

@@ -3,21 +3,16 @@
 	<name>mod_blogroll</name>
 	<author>Alexander Bach</author>
 	<creationDate>2025-07</creationDate>
-	<copyright>(C)
-	2005 Open Source Matters, Inc.</copyright>
-	<license>GNU General Public License version 2 or
-		later; see LICENSE.txt</license>
+	<copyright>(C) 2005 Open Source Matters, Inc.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail>bachalex86@gmail.com</authorEmail>
-	<authorUrl>
-	www.joomla.org</authorUrl>
+	<authorUrl>www.joomla.org</authorUrl>
 	<version>1.0.0</version>
-	<description>This module can display multiple
-	feeds as a blogroll.</description>
+	<description>MOD_BLOGROLL_XML_DESCRIPTION</description>
 	<namespace path="src">Joomla\Module\Blogroll</namespace>
 	<files>
 		<folder module="mod_blogroll">services</folder>
 		<folder>src</folder>
-		<folder>src\Helper</folder>
 		<folder>tmpl</folder>
 		<folder>language</folder>
 	</files>
@@ -105,9 +100,20 @@
 				</field>
 
 				<field
-					name="rssitems"
+					name="rssitems_limit"
+					type="radio"
+					layout="joomla.form.field.radio.switcher"
+					label="MOD_BLOGROLL_FIELD_ITEMS_LIMIT_LABEL"
+					default="0"
+					filter="integer">
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+
+				<field
+					name="rssitems_limit_count"
 					type="number"
-					label="MOD_BLOGROLL_FIELD_ITEMS_LABEL"
+					label="MOD_BLOGROLL_FIELD_ITEMS_LIMIT_COUNT_LABEL"
 					default="5"
 					filter="integer"
 					min="1"
