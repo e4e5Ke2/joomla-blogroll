@@ -15,7 +15,8 @@ $wa->useStyle('mod_blogroll.blogroll_style');
 <!-- Feed items -->
 <?php
 $feedCount = count($feeds);
-$itemDisplayCount = min($feedCount, $params->get('rssitems_limit_count', PHP_INT_MAX));
+$limitItems = $params->get('rssitems_limit', 0);
+$itemDisplayCount = $limitItems ? $params->get('rssitems_limit_count') : $feedCount;
 for ($i = 0; $i < $feedCount; $i++) {
 
 	if ($i == $itemDisplayCount) {
