@@ -9,57 +9,8 @@ Text::script('MOD_BLOGROLL_SHOW_LESS');
 $wa = $app->getDocument()->getWebAssetManager();
 $wa->getRegistry()->addExtensionRegistryFile('mod_blogroll');
 $wa->useScript('mod_blogroll.show-all');
+$wa->useStyle('mod_blogroll.blogroll_style');
 ?>
-
-<style>
-	.blogroll:link,
-	.blogroll:visited {
-		color: currentColor;
-		text-decoration: none;
-	}
-
-	.blogroll:hover,
-	.blogroll:active {
-		color: blue;
-		text-decoration: underline;
-	}
-
-	.mod_blogroll_img {
-		width: 50px;
-		height: 50px;
-		margin-top: 0px;
-		object-fit: cover;
-	}
-
-	.mod_blogroll_showall_container {
-		display: none;
-	}
-
-	.mod_blogroll_showall_button {
-		display: inline;
-		margin-top: 0px;
-		padding: 0;
-		border: 0;
-		font: inherit;
-		text-decoration: none;
-		cursor: pointer;
-		background: transparent;
-		color: currentColor;
-		float: right;
-	}
-
-	.mod_blogroll_showall_button:hover,
-	.mod_blogroll_showall_button:active {
-		color: blue;
-	}
-
-	.author_date_label {
-		color: #606060;
-		font-size: 14px;
-		margin-top: 5px;
-		margin-bottom: 0px;
-	}
-</style>
 
 <!-- Feed items -->
 <?php
@@ -95,21 +46,21 @@ for ($i = 0; $i < $feedCount; $i++) {
 				<!-- Feed title -->
 				<?php if ($feed->feedTitle !== null && $params->get('rsstitle', 1)): ?>
 					<h6>
-						<a class="blogroll" href="<?= $feed->feedUri ?>
+						<a class="mod_blogroll" href="<?= $feed->feedUri ?>
 							" target="_blank" rel="noopener">
 							<?= $feed->feedTitle; ?></a>
 					</h6>
 				<?php endif; ?>
 
 				<!-- Show first item title -->
-				<a class="blogroll" href="<?= htmlspecialchars($feed->itemUri, ENT_COMPAT, 'UTF-8'); ?>" target="_blank"
+				<a class="mod_blogroll" href="<?= htmlspecialchars($feed->itemUri, ENT_COMPAT, 'UTF-8'); ?>" target="_blank"
 					rel="noopener">
 					<?= $feed->itemTitle; ?></a>
 
 				<!--  Feed author / date -->
 				<?php
 				if ($feed->authorDateLabel) { ?>
-					<p class="author_date_label">
+					<p class="mod_blogroll_author_date_label">
 						<?= $feed->authorDateLabel; ?>
 					</p>
 				<?php } ?>

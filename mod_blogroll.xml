@@ -27,6 +27,7 @@
 		destination="mod_blogroll" folder="media">
 		<filename>joomla.asset.json</filename>
 		<folder>js</folder>
+		<folder>css</folder>
 	</media>
 	<help key="Site_Modules:_Blogroll_Display" />
 	<config>
