@@ -13,10 +13,9 @@ class FeedHelper
 
     public const TIMEOUT_IN_SECONDS = 5;
 
-    public function getFeedInformation($params)
+    public function getFeedInformation($params, Translations $translations)
     {
-
-        $urlListString = $params->get('rssurl_list', '');
+        $urlListString = $params['rssurl_list'] ?? '';
         $rssUrls = [];
         foreach (preg_split("/\r\n|\n|\r/", $urlListString) as $url) {
             if (trim($url) !== '') {
@@ -66,9 +65,9 @@ class FeedHelper
         foreach ($results as $result) {
             try {
                 libxml_use_internal_errors(true);
-                $feed = $rssParser->parse($result, $params);
+                $feed = $rssParser->parse($result, $params, $translations);
 
-                if ($feed && $feed->is_data_complete()) {
+                if ($feed?->is_data_complete()) {
                     $feeds[] = $feed;
                 }
                 libxml_use_internal_errors(false);
@@ -81,7 +80,7 @@ class FeedHelper
         $parseEnd = microtime(TRUE);
         Log::add('parse time: ' . floor(($parseEnd - $parseStart) * 1000) . 'ms', Log::DEBUG, 'performance');
 
-        if ($params->get('rsssorting', 1)) {
+        if ($params['rsssorting'] ?? 1) {
             usort($feeds, fn($a, $b) => $a->pubDate < $b->pubDate ? 1 : -1);
         }
 

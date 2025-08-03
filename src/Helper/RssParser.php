@@ -2,8 +2,7 @@
 
 namespace My\Module\Blogroll\Site\Helper;
 
-use DateTimeImmutable;
-use Joomla\CMS\Language\Text;
+use DateTime;
 
 class RssParser
 {
@@ -14,7 +13,7 @@ class RssParser
     protected static $descriptionTags = ['content:encoded', 'description', 'summary', 'content'];
     protected static $thumbnailTags = ['media:thumbnail', 'enclosure'];
 
-    public function parse($xmlString, $params)
+    public function parse($xmlString, $params, Translations $translations)
     {
         $feed = new RssFeed();
         $simpleXML = new \SimpleXMLElement($xmlString);
@@ -32,9 +31,9 @@ class RssParser
         $feed->feedTitle = $feedNode->title;
         $feed->itemTitle = $itemNode->title;
 
-        $feed->pubDate = new DateTimeImmutable($this->first_tag_match($itemNode, RssParser::$pubDateTags));
-        $feed->timeDifference = match ($params->get('rssitemdate_format', '0')) {
-            '0' => $this->get_time_difference($feed->pubDate),
+        $feed->pubDate = new DateTime($this->first_tag_match($itemNode, RssParser::$pubDateTags));
+        $feed->timeDifference = match ($params['rssitemdate_format'] ?? '0') {
+            '0' => $this->get_time_difference($feed->pubDate, $translations),
             '1' => $feed->pubDate->format('d.m.Y'),
             '2' => $feed->pubDate->format('m.d.Y')
         };
@@ -58,10 +57,10 @@ class RssParser
             $feed->author = $this->first_tag_match($itemNode, ['dc:creator']);
         }
 
-        $showAuthor = $feed->author && $params->get('rssauthor', 1);
-        $showDate = $params->get('rssitemdate', 1);
+        $showAuthor = $feed->author && $params['rssauthor'] ?? 1;
+        $showDate = $params['rssitemdate'] ?? 1;
 
-        $authorLabel = $showAuthor ? Text::_('MOD_BLOGROLL_BY') . ' ' . $feed->author : '';
+        $authorLabel = $showAuthor ? $translations->get('MOD_BLOGROLL_BY') . ' ' . $feed->author : '';
         $dateLabel = $showDate ? $feed->timeDifference : '';
 
         if ($showAuthor || $showDate) {
@@ -110,17 +109,17 @@ class RssParser
         return '';
     }
 
-    protected function get_time_difference($pubDate)
+    protected function get_time_difference($pubDate, $translations)
     {
-        $now = new DateTimeImmutable();
-        $interval = $now->diff($pubDate);
+        $now = new DateTime();
+        $interval = $pubDate->diff($now);
 
         $timeDiff = match (true) {
-            $interval->y > 0 => Text::plural('MOD_BLOGROLL_N_YEARS_AGO', $interval->y),
-            $interval->m > 0 => Text::plural('MOD_BLOGROLL_N_MONTHS_AGO', $interval->m),
-            $interval->d > 0 => Text::plural('MOD_BLOGROLL_N_DAYS_AGO', $interval->d),
-            $interval->h > 0 => Text::plural('MOD_BLOGROLL_N_HOURS_AGO', $interval->h),
-            default => Text::plural('MOD_BLOGROLL_N_MINS_AGO', $interval->i)
+            $interval->y > 0 => $translations->getPlural('MOD_BLOGROLL_N_YEARS_AGO', $interval->y),
+            $interval->m > 0 => $translations->getPlural('MOD_BLOGROLL_N_MONTHS_AGO', $interval->m),
+            $interval->d > 0 => $translations->getPlural('MOD_BLOGROLL_N_DAYS_AGO', $interval->d),
+            $interval->h > 0 => $translations->getPlural('MOD_BLOGROLL_N_HOURS_AGO', $interval->h),
+            default => $translations->getPlural('MOD_BLOGROLL_N_MINS_AGO', $interval->i)
         };
 
         return $timeDiff;

@@ -2,7 +2,7 @@
 
 namespace My\Module\Blogroll\Site\Helper;
 
-use DateTimeImmutable;
+use DateTime;
 
 class RssFeed
 {
@@ -11,7 +11,7 @@ class RssFeed
     public string $feedUri = '';
     public string $itemUri = '';
     public string $description = '';
-    public DateTimeImmutable $pubDate;
+    public DateTime $pubDate;
     public string $timeDifference = '';
     public string $imgUri = '';
     public string $author = '';
