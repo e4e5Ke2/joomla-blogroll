@@ -1,19 +1,6 @@
 <?php
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Language\Text;
-
-Text::script('MOD_BLOGROLL_SHOW_MORE');
-Text::script('MOD_BLOGROLL_SHOW_LESS');
-
-$wa = $app->getDocument()->getWebAssetManager();
-$wa->getRegistry()->addExtensionRegistryFile('mod_blogroll');
-$wa->useScript('mod_blogroll.show-all');
-$wa->useStyle('mod_blogroll.blogroll_style');
-?>
-
-<!-- Feed items -->
-<?php
 $feedCount = count($feeds);
 $limitItems = $params['rssitems_limit'] ?? 0;
 $itemDisplayCount = $limitItems ? $params['rssitems_limit_count'] : $feedCount;
@@ -45,7 +32,7 @@ for ($i = 0; $i < $feedCount; $i++) {
 			<div style="flex-grow:1;overflow:auto;">
 
 				<!-- Feed title -->
-				<h6>
+				<h6 class="mod_blogroll">
 					<a class="mod_blogroll" href="<?= $feed->feedUri ?>
 							" target="_blank" rel="noopener">
 						<?= $feed->feedTitle; ?></a>
@@ -72,5 +59,5 @@ for ($i = 0; $i < $feedCount; $i++) {
 <!-- Button to collapse/expand -->
 <?php if ($feedCount > $itemDisplayCount) { ?>
 	</div>
-	<button class="mod_blogroll_showall_button" type="button"><?= Text::_('MOD_BLOGROLL_SHOW_MORE'); ?></button>
+	<button class="mod_blogroll_showall_button" type="button"><?= $translations->get('MOD_BLOGROLL_SHOW_MORE'); ?></button>
 <?php } ?>
