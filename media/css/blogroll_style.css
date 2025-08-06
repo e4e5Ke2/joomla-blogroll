@@ -23,6 +23,7 @@ h6.mod_blogroll {
 
 .mod_blogroll_showall_container {
     display: none;
+    overflow: auto;
 }
 
 .mod_blogroll_showall_button {

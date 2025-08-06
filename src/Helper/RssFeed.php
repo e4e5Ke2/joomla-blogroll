@@ -17,7 +17,7 @@ class RssFeed
     public string $author = '';
     public string $authorDateLabel = '';
 
-    protected $optionalKeys = ['imgUri', 'author', 'authorDateLabel'];
+    protected $optionalKeys = ['imgUri', 'author', 'authorDateLabel', 'timeDifference'];
 
     public function is_data_complete()
     {
