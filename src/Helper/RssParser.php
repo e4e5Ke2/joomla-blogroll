@@ -32,7 +32,7 @@ class RssParser
         $feed->itemTitle = $itemNode->title;
 
         $feed->pubDate = new DateTime($this->first_tag_match($itemNode, RssParser::$pubDateTags));
-        $feed->timeDifference = match ($params['rssitemdate'] ?? '1') {
+        $feed->timeDifference = match ($params->get('rssitemdate', '1')) {
             '0' => '',
             '1' => $this->get_time_difference($feed->pubDate, $translations),
             '2' => $feed->pubDate->format('d.m.Y'),
@@ -58,7 +58,7 @@ class RssParser
             $feed->author = $this->first_tag_match($itemNode, ['dc:creator']);
         }
 
-        $showAuthor = $feed->author && $params['rssauthor'] ?? 1;
+        $showAuthor = $feed->author && $params->get('rssauthor', 1);
         $authorLabel = $showAuthor ? $translations->get('MOD_BLOGROLL_BY') . ' ' . $feed->author : '';
 
         if ($showAuthor || $feed->timeDifference) {

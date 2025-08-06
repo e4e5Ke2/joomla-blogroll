@@ -2,8 +2,6 @@
 
 namespace My\Module\Blogroll\Site\Helper;
 
-use Joomla\CMS\Log\Log;
-
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
 // phpcs:enable PSR1.Files.SideEffects
@@ -15,7 +13,7 @@ class FeedHelper
 
     public function getFeedInformation($params, Translations $translations)
     {
-        $urlListString = $params['rssurl_list'] ?? '';
+        $urlListString = $params->get('rssurl_list', '');
         $rssUrls = [];
         foreach (preg_split("/\r\n|\n|\r/", $urlListString) as $url) {
             if (trim($url) !== '') {
@@ -52,12 +50,8 @@ class FeedHelper
 
             if ($result) {
                 $results[] = $result;
-            } else {
-                Log::add('url timed out: ' . $rssUrls[$i], Log::DEBUG, 'curl');
             }
         }
-        $curlEnd = microtime(TRUE);
-        Log::add('multi curl time: ' . floor(($curlEnd - $curlStart) * 1000) . 'ms', Log::DEBUG, 'performance');
 
         $parseStart = microtime(true);
         $rssParser = new RssParser();
@@ -75,12 +69,8 @@ class FeedHelper
                 // We swallow this.
             }
         }
-        Log::add('loaded successfully: ' . count($feeds) . '/' . $urlCount, Log::DEBUG, 'curl');
 
-        $parseEnd = microtime(TRUE);
-        Log::add('parse time: ' . floor(($parseEnd - $parseStart) * 1000) . 'ms', Log::DEBUG, 'performance');
-
-        if ($params['rsssorting'] ?? 1) {
+        if ($params->get('rsssorting', 1)) {
             usort($feeds, fn($a, $b) => $a->pubDate < $b->pubDate ? 1 : -1);
         }
 

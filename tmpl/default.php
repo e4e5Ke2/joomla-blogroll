@@ -2,8 +2,8 @@
 defined('_JEXEC') or die;
 
 $feedCount = count($feeds);
-$limitItems = $params['rssitems_limit'] ?? 0;
-$itemDisplayCount = $limitItems ? $params['rssitems_limit_count'] : $feedCount;
+$limitItems = $params->get('rssitems_limit', 0);
+$itemDisplayCount = $limitItems ? $params->get('rssitems_limit_count') : $feedCount;
 for ($i = 0; $i < $feedCount; $i++) {
 
 	if ($i == $itemDisplayCount) {
@@ -18,7 +18,7 @@ for ($i = 0; $i < $feedCount; $i++) {
 		<div style="display:flex">
 
 			<!-- Feed image -->
-			<?php if ($params['rssimage'] ?? 1): ?>
+			<?php if ($params->get('rssimage', 1)): ?>
 				<div style="width:60px;flex-shrink:0">
 					<a href="<?= htmlspecialchars($feed->itemUri, ENT_COMPAT, 'UTF-8'); ?>" target="_blank" rel="noopener">
 						<?php
