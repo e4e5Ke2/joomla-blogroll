@@ -52,7 +52,11 @@ for ($i = 0; $i < $feedCount; $i++) {
 				<?php } ?>
 			</div>
 		</div>
-		<hr>
+
+		<!-- Divider (don't show under last item if no button) -->
+		<?php if ($feedCount > $itemDisplayCount || $i < $feedCount - 1): ?>
+			<hr>
+		<?php endif; ?>
 	</div>
 <?php } ?>
 

@@ -26,4 +26,4 @@ const showAll = (event) => {
     }
 };
 
-document.querySelector('.mod_blogroll_showall_button').addEventListener('click', showAll);
+document.querySelector('.mod_blogroll_showall_button')?.addEventListener('click', showAll);
