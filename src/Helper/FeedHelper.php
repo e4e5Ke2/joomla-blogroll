@@ -8,9 +8,6 @@ namespace My\Module\Blogroll\Site\Helper;
 
 class FeedHelper
 {
-
-    public const TIMEOUT_IN_SECONDS = 5;
-
     public function getFeedInformation($params, Translations $translations)
     {
         $urlListString = $params->get('rssurl_list', '');
@@ -42,7 +39,7 @@ class FeedHelper
         $curlExecStart = time();
         do {
             curl_multi_exec($master, $running);
-        } while ($running > 0 && (time() - $curlExecStart) <= FeedHelper::TIMEOUT_IN_SECONDS);
+        } while ($running > 0 && (time() - $curlExecStart) <= $params->get('rss_timeout', 5));
 
         $results = [];
         for ($i = 0; $i < $urlCount; $i++) {

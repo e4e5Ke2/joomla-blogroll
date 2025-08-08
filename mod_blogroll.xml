@@ -147,6 +147,15 @@
 					default="900"
 					filter="integer"
 				/>
+				
+				<field
+					name="rss_timeout"
+					type="number"
+					label="MOD_BLOGROLL_FIELD_TIMEOUT_LABEL"
+					default="5"
+					min="1"
+					filter="integer"
+				/>
 			</fieldset>
 		</fields>
 	</config>
