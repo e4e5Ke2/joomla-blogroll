@@ -34,12 +34,14 @@
 		<fields name="params">
 			<fieldset name="basic">
 				<field
+					addfilterprefix="My\Module\Blogroll\Site\Helper"
 					name="rssurl_list"
 					type="textarea"
 					label="MOD_BLOGROLL_FIELD_RSSURL_LABEL"
 					required="true"
 					rows="10"
 					cols="5"
+					filter="lettersonly"
 					hint="MOD_BLOGROLL_FIELD_RSSURL_HINT"
 				/>
 
