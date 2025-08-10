@@ -20,7 +20,7 @@ class Dispatcher extends AbstractModuleDispatcher
         $data = parent::getLayoutData();
         $feedHelper = new FeedHelper();
         $translations = new JoomlaTranslations();
-        $data['feeds'] = $feedHelper->getFeedInformation($data['params'], $translations);
+        $data['feeds'] = $feedHelper->getFeeds($data['params'], $translations);
         $data['translations'] = $translations;
         Text::script('MOD_BLOGROLL_SHOW_MORE');
         Text::script('MOD_BLOGROLL_SHOW_LESS');

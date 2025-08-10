@@ -8,9 +8,8 @@ namespace My\Module\Blogroll\Site\Helper;
 
 class FeedHelper
 {
-    public function getFeedInformation($params, Translations $translations)
-    {
-        $urlListString = $params->get('rssurl_list', '');
+
+    public function multicurl($urlListString, $timeout) {
         $rssUrls = [];
         foreach (preg_split("/\r\n|\n|\r/", $urlListString) as $url) {
             if (trim($url) !== '') {
@@ -38,23 +37,32 @@ class FeedHelper
         $curlExecStart = time();
         do {
             curl_multi_exec($master, $running);
-        } while ($running > 0 && (time() - $curlExecStart) <= $params->get('rss_timeout', 5));
+        } while ($running > 0 && (time() - $curlExecStart) <= $timeout);
 
-        $results = [];
+        $responses = [];
         for ($i = 0; $i < $urlCount; $i++) {
-            $result = curl_multi_getcontent($curl_arr[$i]);
-
-            if ($result) {
-                $results[] = $result;
-            }
+            $response = curl_multi_getcontent($curl_arr[$i]);
+            $responses[$rssUrls[$i]] = $response;
         }
+
+        return $responses;
+    }
+
+    public function getFeeds($params, Translations $translations)
+    {
+        $urlListString = $params->get('rssurl_list', '');
+        $responses = $this->multicurl($urlListString, $params->get('rss_timeout', 5));
 
         $rssParser = new RssParser();
         $feeds = [];
-        foreach ($results as $result) {
+        foreach ($responses as $response) {
+
+            if (!$response)
+                continue;
+
             try {
                 libxml_use_internal_errors(true);
-                $feed = $rssParser->parse($result, $params, $translations);
+                $feed = $rssParser->parse($response, $params, $translations);
 
                 if ($feed?->is_data_complete()) {
                     $feeds[] = $feed;
