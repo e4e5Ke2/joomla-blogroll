@@ -38,10 +38,11 @@
 					name="rssurl_list"
 					type="textarea"
 					label="MOD_BLOGROLL_FIELD_RSSURL_LABEL"
+					description='this is a description'
 					required="true"
 					rows="10"
 					cols="5"
-					filter="lettersonly"
+					filter="rss"
 					hint="MOD_BLOGROLL_FIELD_RSSURL_HINT"
 				/>
 

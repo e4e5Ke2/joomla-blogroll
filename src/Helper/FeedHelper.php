@@ -18,7 +18,6 @@ class FeedHelper
             }
         }
 
-        $curlStart = microtime(true);
         $master = curl_multi_init();
         $urlCount = count($rssUrls);
         $curl_arr = [];
@@ -50,7 +49,6 @@ class FeedHelper
             }
         }
 
-        $parseStart = microtime(true);
         $rssParser = new RssParser();
         $feeds = [];
         foreach ($results as $result) {

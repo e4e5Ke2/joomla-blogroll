@@ -13,7 +13,7 @@ class RssParser
     protected static $descriptionTags = ['content:encoded', 'description', 'summary', 'content'];
     protected static $thumbnailTags = ['media:thumbnail', 'enclosure'];
 
-    public function parse($xmlString, $params, Translations $translations)
+    public function parse($xmlString, $params, Translations $translations): ?RssFeed  
     {
         $feed = new RssFeed();
         $simpleXML = new \SimpleXMLElement($xmlString);
@@ -24,7 +24,7 @@ class RssParser
         };
 
         if (!$feedNode)
-            return;
+            return null;
 
         $itemNode = $this->first_tag_match($feedNode, RssParser::$itemTags);
 
