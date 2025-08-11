@@ -14,7 +14,7 @@ class RssFilter implements FormFilterInterface
     public function filter(\SimpleXMLElement $element, $urlListString, $group = null, Registry $input = null, Form $form = null)
     {
         $feedHelper = new FeedHelper();
-        $responses = $feedHelper->multicurl($urlListString, 10);
+        $responses = $feedHelper->multicurl($urlListString, 5);
 
         $validatedUrls = [];
         foreach ($responses as $url => $response) {
