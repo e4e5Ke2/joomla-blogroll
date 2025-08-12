@@ -2,15 +2,14 @@
 
 namespace My\Module\Blogroll\Site\Dispatcher;
 
+\defined('_JEXEC') or die;
+
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
 use My\Module\Blogroll\Site\Helper\FeedHelper;
 use My\Module\Blogroll\Site\Helper\JoomlaTranslations;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Factory;
 
-// phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
-// phpcs:enable PSR1.Files.SideEffects
 
 class Dispatcher extends AbstractModuleDispatcher
 {

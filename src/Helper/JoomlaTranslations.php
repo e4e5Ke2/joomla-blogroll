@@ -2,6 +2,8 @@
 
 namespace My\Module\Blogroll\Site\Helper;
 
+\defined('_JEXEC') or die;
+
 use Joomla\CMS\Language\Text;
 
 class JoomlaTranslations implements Translations  {

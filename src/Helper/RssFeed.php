@@ -2,6 +2,8 @@
 
 namespace My\Module\Blogroll\Site\Helper;
 
+\defined('_JEXEC') or die;
+
 use DateTime;
 
 class RssFeed
