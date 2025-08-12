@@ -16,13 +16,6 @@
 		<folder>tmpl</folder>
 		<folder>language</folder>
 	</files>
-	<files>
-		<folder>language</folder>
-	</files> or <administration>
-		<files>
-			<folder>language</folder>
-		</files>
-	</administration>
 	<media
 		destination="mod_blogroll" folder="media">
 		<filename>joomla.asset.json</filename>
@@ -111,6 +104,7 @@
 					filter="integer"
 					min="1"
 					validate="number"
+					showon="rssitems_limit:1"
 				/>
 
 			</fieldset>
