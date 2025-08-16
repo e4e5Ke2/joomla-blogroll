@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package     Blogroll
+ * @author      Alexander Bach (e4e5Ke2 on github)
+ * @copyright   2025 - now
+ * @license     GPL http://gnu.org
+ */
 
 namespace My\Module\Blogroll\Site\Helper;
 
@@ -16,16 +22,20 @@ class RssFilter implements FormFilterInterface
         $feedHelper = new FeedHelper();
         $responses = $feedHelper->multicurl($urlListString, 5);
 
+        $formatSuccess = fn($url) => '✅ ' . $url;
+        $formatFailure = fn($url) => '❌ ' . $url;
+
         $validatedUrls = [];
         foreach ($responses as $url => $response) {
 
             if (!$response) {
-                $validatedUrls[] = '❌ ' . $url;
+                $validatedUrls[] = $formatFailure($url);
             } else if ($this->isRss($response)) {
-                $validatedUrls[] = '✔ ' . $url;
+                $validatedUrls[] = $formatSuccess($url);
             } else {
+                // Try to extract rss link from website
                 $rssUrl = $this->retrieveRssUrl($response, $url);
-                $validatedUrls[] = empty($rssUrl) ? '❌ ' . $url : '✔ ' . $rssUrl;
+                $validatedUrls[] = empty($rssUrl) ? $formatFailure($url) : $formatSuccess($rssUrl);
             }
         }
 

@@ -1,10 +1,14 @@
 <?php
+/**
+ * @package     Blogroll
+ * @author      Alexander Bach (e4e5Ke2 on github)
+ * @copyright   2025 - now
+ * @license     GPL http://gnu.org
+ */
 
 namespace My\Module\Blogroll\Site\Helper;
 
-// phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
-// phpcs:enable PSR1.Files.SideEffects
 
 class FeedHelper
 {

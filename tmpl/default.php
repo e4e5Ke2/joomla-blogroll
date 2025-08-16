@@ -1,9 +1,17 @@
 <?php
+/**
+ * @package     Blogroll
+ * @author      Alexander Bach (e4e5Ke2 on github)
+ * @copyright   2025 - now
+ * @license     GPL http://gnu.org
+ */
+
 defined('_JEXEC') or die;
 
 $feedCount = count($feeds);
 $limitItems = $params->get('rssitems_limit', 0);
 $itemDisplayCount = $limitItems ? $params->get('rssitems_limit_count') : $feedCount;
+
 for ($i = 0; $i < $feedCount; $i++) {
 
 	if ($i == $itemDisplayCount) {

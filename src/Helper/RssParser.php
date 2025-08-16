@@ -1,4 +1,10 @@
 <?php
+/**
+ * @package     Blogroll
+ * @author      Alexander Bach (e4e5Ke2 on github)
+ * @copyright   2025 - now
+ * @license     GPL http://gnu.org
+ */
 
 namespace My\Module\Blogroll\Site\Helper;
 
