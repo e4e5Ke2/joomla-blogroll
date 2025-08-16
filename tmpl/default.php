@@ -3,7 +3,7 @@
  * @package     Blogroll
  * @author      Alexander Bach (e4e5Ke2 on github)
  * @copyright   2025 - now
- * @license     GPL http://gnu.org
+ * @license     GNU General Public License version 2 or later
  */
 
 defined('_JEXEC') or die;
