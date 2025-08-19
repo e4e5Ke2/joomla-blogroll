@@ -6,13 +6,13 @@
  * @license     GNU General Public License version 2 or later
  */
 
-namespace My\Module\Blogroll\Site\Dispatcher;
+namespace Joomla\Module\Blogroll\Site\Dispatcher;
 
 \defined('_JEXEC') or die;
 
 use Joomla\CMS\Dispatcher\AbstractModuleDispatcher;
-use My\Module\Blogroll\Site\Helper\FeedHelper;
-use My\Module\Blogroll\Site\Helper\JoomlaTranslations;
+use Joomla\Module\Blogroll\Site\Helper\FeedHelper;
+use Joomla\Module\Blogroll\Site\Helper\JoomlaTranslations;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Factory;
 

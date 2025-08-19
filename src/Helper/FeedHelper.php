@@ -6,14 +6,15 @@
  * @license     GNU General Public License version 2 or later
  */
 
-namespace My\Module\Blogroll\Site\Helper;
+namespace Joomla\Module\Blogroll\Site\Helper;
 
 \defined('_JEXEC') or die;
 
 class FeedHelper
 {
 
-    public function multicurl($urlListString, $timeout) {
+    public function multicurl($urlListString, $timeout)
+    {
         $rssUrls = [];
         foreach (preg_split("/\r\n|\n|\r/", $urlListString) as $url) {
             if (trim($url) !== '') {
@@ -31,10 +32,14 @@ class FeedHelper
             curl_setopt($curl_arr[$i], CURLOPT_RETURNTRANSFER, true);
 
             // Adding a valid user agent string, otherwise some feed-servers return an error
-            curl_setopt($curl_arr[$i], CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:41.0) Gecko/20100101 Firefox/41.0');
+            curl_setopt($curl_arr[$i], CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:141.0) Gecko/20100101 Firefox/141.0');
+            
+            // TODO - test this option:
+            // curl_setopt($curl_arr[$i], CURLOPT_USERAGENT, $_SERVER ['HTTP_USER_AGENT']);
 
             // This one is necessary for redirects, e.g. in case of wordpress
             curl_setopt($curl_arr[$i], CURLOPT_FOLLOWLOCATION, true);
+
             curl_multi_add_handle($master, $curl_arr[$i]);
         }
 

@@ -9,7 +9,7 @@
 	<authorUrl>web</authorUrl>
 	<version>1.0.0</version>
 	<description>MOD_BLOGROLL_XML_DESCRIPTION</description>
-	<namespace path="src">My\Module\Blogroll</namespace>
+	<namespace path="src">Joomla\Module\Blogroll</namespace>
 	<files>
 		<folder module="mod_blogroll">services</folder>
 		<folder>src</folder>
@@ -27,7 +27,7 @@
 		<fields name="params">
 			<fieldset name="basic">
 				<field
-					addfilterprefix="My\Module\Blogroll\Site\Helper"
+					addfilterprefix="Joomla\Module\Blogroll\Site\Helper"
 					name="rssurl_list"
 					type="textarea"
 					label="MOD_BLOGROLL_FIELD_RSSURL_LABEL"

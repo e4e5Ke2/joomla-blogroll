@@ -6,7 +6,7 @@
  * @license     GNU General Public License version 2 or later
  */
 
-namespace My\Module\Blogroll\Site\Helper;
+namespace Joomla\Module\Blogroll\Site\Helper;
 
 defined('_JEXEC') or die;
 
@@ -49,7 +49,6 @@ class RssFilter implements FormFilterInterface
 
     private function retrieveRssUrl($input, $baseUrl): string
     {
-        $rssUrl = '';
         try {
             $doc = new \DOMDocument();
             libxml_use_internal_errors(true);
@@ -58,13 +57,13 @@ class RssFilter implements FormFilterInterface
                 if ($linkNode->getAttribute('type') == 'application/rss+xml') {
                     $href = $linkNode->getAttribute('href');
                     $rssUrl = str_starts_with($href, 'http') ? $href : $baseUrl . $href;
-                    break;
+                    return $rssUrl;
                 }
             }
             libxml_use_internal_errors(false);
         } catch (\Exception) {
             // We swallow this.
         }
-        return $rssUrl;
+        return '';
     }
 }

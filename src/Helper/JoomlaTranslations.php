@@ -6,7 +6,7 @@
  * @license     GNU General Public License version 2 or later
  */
 
-namespace My\Module\Blogroll\Site\Helper;
+namespace Joomla\Module\Blogroll\Site\Helper;
 
 \defined('_JEXEC') or die;
 
