@@ -24,7 +24,7 @@
 	</media>
 	<updateservers>
 		<server type="extension" name="Example Updates">
-			https://github.com/e4e5Ke2/joomla-blogroll/blob/main/update_servers.xml</server>
+			https://raw.githubusercontent.com/e4e5Ke2/joomla-blogroll/refs/heads/main/update_servers.xml</server>
 	</updateservers>
 	<help key="Site_Modules:_Blogroll_Display" />
 	<config>
