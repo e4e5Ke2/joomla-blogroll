@@ -18,10 +18,10 @@ class RssParser
     protected static $itemTags = ['entry', 'item'];
     protected static $pubDateTags = ['pubDate', 'published'];
     // Order is important here. Some blogs have content encoded and description. We want content encoded if available.
-    protected static $descriptionTags = ['content:encoded', 'description', 'summary', 'content'];
+    protected static $descriptionTags = ['content:encoded', 'description', 'summary', 'content', 'atom:summary'];
     protected static $thumbnailTags = ['media:thumbnail', 'enclosure'];
 
-    public function parse($xmlString, $params, Translations $translations): ?RssFeed  
+    public function parse($xmlString, $params, Translations $translations): ?RssFeed
     {
         $feed = new RssFeed();
         $simpleXML = new \SimpleXMLElement($xmlString);
